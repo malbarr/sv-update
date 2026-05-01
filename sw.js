@@ -1,4 +1,4 @@
-const CACHE = 'sv-update-v4';
+const CACHE = 'sv-update-v5';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
