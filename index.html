@@ -983,8 +983,8 @@ async function loadDate(dateStr) {
   if (list) list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3></div>`;
   allPapers = [];
   try {
-    const r = await fetch(`./data/${dateStr}.json?v=${Date.now()}`);
-    if (!r.ok) throw new Error('no data');
+    const r = await fetch(`./data/${dateStr}.json`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
     allPapers = await r.json();
     const published = allPapers.filter(a => !a.reject);
     const n = published.length;
@@ -998,12 +998,18 @@ async function loadDate(dateStr) {
     const homeDateEl = document.getElementById('home-upd-date');
     if (homeDateEl) homeDateEl.textContent = `📅 ${dateLabel}`;
     renderPapers(allPapers);
-  } catch {
+  } catch(err) {
     allPapers = [];
     const homeEl = document.getElementById('home-upd-count');
     if (homeEl) homeEl.textContent = '📭 لا تحديثات اليوم';
-    const list = document.getElementById('upd-list');
-    if (list) list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">📭</div><h3>لا توجد مقالات</h3><p>لا توجد بيانات لهذا اليوم.</p></div>`;
+    const errList = document.getElementById('upd-list');
+    if (errList) errList.innerHTML = `
+      <div class="upd-empty">
+        <div class="upd-empty-icon">📭</div>
+        <h3>لا توجد مقالات</h3>
+        <p>تعذّر تحميل البيانات.<br><small style="color:#999">${err.message} · ${dateStr}</small></p>
+        <button onclick="loadTodayPapers()" style="margin-top:12px;padding:8px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#0F766E,#14B8A6);color:#fff;font-size:13px;cursor:pointer;font-family:Tajawal,sans-serif">🔄 إعادة المحاولة</button>
+      </div>`;
   }
 }
 
