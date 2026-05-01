@@ -507,12 +507,25 @@
       transition: color .15s;
     }
     .nav-btn .nav-ic { font-size: 20px; line-height: 1; }
-    .nav-btn.active  { color: #0F766E; }
+    .nav-btn.active  { color: #0F766E; font-weight: 700; }
+    #nav-upd   .nav-ic { color: #0F766E; }
+    #nav-sinus .nav-ic { color: var(--sinus); }
+    #nav-voice .nav-ic { color: var(--voice); }
+    #nav-gen   .nav-ic { color: var(--gen); }
+    #nav-biz   .nav-ic { color: var(--biz); }
+    #nav-pub   .nav-ic { color: var(--pub); }
     #nav-sinus.active { color: var(--sinus); }
     #nav-voice.active { color: var(--voice); }
     #nav-gen.active   { color: var(--gen); }
     #nav-biz.active   { color: var(--biz); }
     #nav-pub.active   { color: var(--pub); }
+    .nav-badge {
+      font-size: 9px; font-weight: 800;
+      background: #EF4444; color: #fff;
+      border-radius: 8px; padding: 0 4px;
+      min-width: 14px; text-align: center;
+      display: inline-block; line-height: 14px;
+    }
   </style>
 </head>
 <body>
@@ -610,6 +623,7 @@
       <button class="upd-tab" data-filter="skull_base"  onclick="filterPapers('skull_base',this)">🧠 Skull Base</button>
       <button class="upd-tab" data-filter="laryngology" onclick="filterPapers('laryngology',this)">🎙️ Voice</button>
       <button class="upd-tab" data-filter="sleep"       onclick="filterPapers('sleep',this)">😴 Sleep</button>
+      <button class="upd-tab" data-filter="general_all" onclick="filterPapers('general_all',this)">👂 General</button>
       <button class="upd-tab" data-filter="business"    onclick="filterPapers('business',this)">💼 Biz</button>
       <button class="upd-tab" data-filter="jc"          onclick="filterPapers('jc',this)">🎯 JC</button>
       <button class="upd-tab" data-filter="watch"       onclick="filterPapers('watch',this)">👁 Watch</button>
@@ -644,12 +658,12 @@
 </div><!-- #screen-area -->
 
 <nav class="bottom-nav" id="bottom-nav">
-  <button class="nav-btn active" id="nav-upd"   onclick="goTab('upd')">  <span class="nav-ic">📰</span>Updates</button>
-  <button class="nav-btn"        id="nav-sinus"  onclick="goTab('sinus')"><span class="nav-ic">🫁</span>Sinus</button>
-  <button class="nav-btn"        id="nav-voice"  onclick="goTab('voice')"><span class="nav-ic">🎙️</span>Voice</button>
-  <button class="nav-btn"        id="nav-gen"    onclick="goTab('gen')">  <span class="nav-ic">👂</span>General</button>
-  <button class="nav-btn"        id="nav-biz"    onclick="goTab('biz')">  <span class="nav-ic">💼</span>Biz</button>
-  <button class="nav-btn"        id="nav-pub"    onclick="goTab('pub')">  <span class="nav-ic">📺</span>Public</button>
+  <button class="nav-btn active" id="nav-upd"   onclick="goTab('upd')">  <span class="nav-ic">📰</span><span class="nav-badge" id="badge-upd" style="display:none"></span>Updates</button>
+  <button class="nav-btn"        id="nav-sinus"  onclick="goTab('sinus')"><span class="nav-ic">🫁</span><span class="nav-badge" id="badge-sinus" style="display:none"></span>Sinus</button>
+  <button class="nav-btn"        id="nav-voice"  onclick="goTab('voice')"><span class="nav-ic">🎙️</span><span class="nav-badge" id="badge-voice" style="display:none"></span>Voice</button>
+  <button class="nav-btn"        id="nav-gen"    onclick="goTab('gen')">  <span class="nav-ic">👂</span><span class="nav-badge" id="badge-gen" style="display:none"></span>General</button>
+  <button class="nav-btn"        id="nav-biz"    onclick="goTab('biz')">  <span class="nav-ic">💼</span><span class="nav-badge" id="badge-biz" style="display:none"></span>Biz</button>
+  <button class="nav-btn"        id="nav-pub"    onclick="goTab('pub')">  <span class="nav-ic">📺</span><span class="nav-badge" id="badge-pub" style="display:none"></span>Public</button>
 </nav>
 
 </div><!-- #app -->
@@ -1027,12 +1041,35 @@ async function loadTodayPapers() {
   await loadDate(today);
 }
 
+const SUBS_SINUS  = ['rhinology','skull_base'];
+const SUBS_VOICE  = ['laryngology','sleep'];
+const SUBS_GEN    = ['general','head_neck','otology','pediatric','facial_plastics'];
+
 function getFilteredPapers() {
   const published = allPapers.filter(a => !a.reject);
-  if (currentFilter === 'all')   return published;
-  if (currentFilter === 'jc')    return published.filter(a => a.journal_club);
-  if (currentFilter === 'watch') return published.filter(a => a.watch);
+  if (currentFilter === 'all')        return published;
+  if (currentFilter === 'jc')         return published.filter(a => a.journal_club);
+  if (currentFilter === 'watch')      return published.filter(a => a.watch);
+  if (currentFilter === 'general_all')return published.filter(a => SUBS_GEN.includes(a.subspecialty));
   return published.filter(a => a.subspecialty === currentFilter);
+}
+
+function updateNavBadges() {
+  const p = allPapers.filter(a => !a.reject);
+  const defs = [
+    ['badge-upd',   p.length],
+    ['badge-sinus', p.filter(a => SUBS_SINUS.includes(a.subspecialty)).length],
+    ['badge-voice', p.filter(a => SUBS_VOICE.includes(a.subspecialty)).length],
+    ['badge-gen',   p.filter(a => SUBS_GEN.includes(a.subspecialty)).length],
+    ['badge-biz',   p.filter(a => a.subspecialty === 'business').length],
+    ['badge-pub',   0],
+  ];
+  defs.forEach(([id, n]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = n || '';
+    el.style.display = n > 0 ? 'inline-block' : 'none';
+  });
 }
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -1042,6 +1079,8 @@ function renderPapers(papers) {
   if (!container) return;
   const filtered = getFilteredPapers();
   const total = allPapers.filter(a => !a.reject).length;
+
+  updateNavBadges();
 
   // Update count bar
   const bar = document.getElementById('upd-count-bar');
