@@ -17,8 +17,12 @@
     :root {
       --sinus:       #0077B6;
       --sinus-pale:  #E8F6FF;
+      --skull:       #5B6EAE;
+      --skull-pale:  #EEF0FF;
       --voice:       #7B2FBE;
       --voice-pale:  #F3E8FF;
+      --sleep:       #0284C7;
+      --sleep-pale:  #E0F2FE;
       --gen:         #15803D;
       --gen-pale:    #ECFDF5;
       --biz:         #C2410C;
@@ -176,6 +180,12 @@
     #gen    .sec-header { background:linear-gradient(135deg,#14532D,#15803D,#22C55E); }
     #biz    .sec-header { background:linear-gradient(135deg,#9A3412,#C2410C,#F97316); }
     #pub    .sec-header { background:linear-gradient(135deg,#7F1D1D,#B91C1C,#F87171); }
+    #sleep  .sec-header { background:linear-gradient(135deg,#0C4A6E,#075985,#0284C7); }
+    .sec-art-hdr {
+      font-size:11px; font-weight:700; color:var(--text-muted);
+      text-transform:uppercase; letter-spacing:0.8px;
+      padding:12px 14px 4px; border-top:1px solid var(--border); margin-top:4px;
+    }
 
     .back-btn {
       width:36px; height:36px; border-radius:50%;
@@ -546,56 +556,10 @@
     }
     .qchip.active { background: #1E293B; color: #fff; border-color: #1E293B; }
 
-    /* ════════ BOTTOM NAV ════════ */
     #screen-area {
       flex: 1;
       position: relative;
       overflow: hidden;
-    }
-    .bottom-nav {
-      display: flex;
-      background: #fff;
-      border-top: 1.5px solid var(--border);
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-      flex-shrink: 0;
-      z-index: 200;
-    }
-    .nav-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 9px;
-      font-weight: 600;
-      color: #94A3B8;
-      padding: 7px 2px 6px;
-      transition: color .15s;
-    }
-    .nav-btn .nav-ic { font-size: 20px; line-height: 1; }
-    .nav-btn.active  { color: #0F766E; font-weight: 700; }
-    #nav-upd   .nav-ic { color: #0F766E; }
-    #nav-sinus .nav-ic { color: var(--sinus); }
-    #nav-voice .nav-ic { color: var(--voice); }
-    #nav-gen   .nav-ic { color: var(--gen); }
-    #nav-biz   .nav-ic { color: var(--biz); }
-    #nav-pub   .nav-ic { color: var(--pub); }
-    #nav-sinus.active { color: var(--sinus); }
-    #nav-voice.active { color: var(--voice); }
-    #nav-gen.active   { color: var(--gen); }
-    #nav-biz.active   { color: var(--biz); }
-    #nav-pub.active   { color: var(--pub); }
-    .nav-badge {
-      font-size: 9px; font-weight: 800;
-      background: #EF4444; color: #fff;
-      border-radius: 8px; padding: 0 4px;
-      min-width: 14px; text-align: center;
-      display: inline-block; line-height: 14px;
     }
   </style>
 </head>
@@ -606,61 +570,99 @@
   <!-- ══════════════════ SINUS ══════════════════ -->
   <div class="screen" id="sinus">
     <div class="sec-header">
+      <button class="back-btn" onclick="goTab('upd')">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">SINUS</div>
         <div class="sec-title-ar">الجيوب الأنفية · قاعدة الجمجمة · الأنف</div>
       </div>
       <div class="sec-emoji">🫁</div>
     </div>
-    <div class="scroll-content" id="sinus-list"></div>
+    <div class="scroll-content">
+      <div id="sinus-list"></div>
+      <div class="sec-art-hdr" id="sinus-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="sinus-art"></div>
+    </div>
   </div>
 
   <!-- ══════════════════ VOICE ══════════════════ -->
   <div class="screen" id="voice">
     <div class="sec-header">
+      <button class="back-btn" onclick="goTab('upd')">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">VOICE</div>
         <div class="sec-title-ar">الصوت · الحنجرة · المجرى الهوائي</div>
       </div>
       <div class="sec-emoji">🎙️</div>
     </div>
-    <div class="scroll-content" id="voice-list"></div>
+    <div class="scroll-content">
+      <div id="voice-list"></div>
+      <div class="sec-art-hdr" id="voice-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="voice-art"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SLEEP ══════════════════ -->
+  <div class="screen" id="sleep">
+    <div class="sec-header">
+      <button class="back-btn" onclick="goTab('upd')">‹</button>
+      <div class="sec-title-wrap">
+        <div class="sec-title-en">SLEEP</div>
+        <div class="sec-title-ar">اضطرابات النوم · انقطاع التنفس الانسدادي</div>
+      </div>
+      <div class="sec-emoji">😴</div>
+    </div>
+    <div class="scroll-content" id="sleep-art"></div>
   </div>
 
   <!-- ══════════════════ GENERAL ENT ══════════════════ -->
   <div class="screen" id="gen">
     <div class="sec-header">
+      <button class="back-btn" onclick="goTab('upd')">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">GENERAL ENT</div>
         <div class="sec-title-ar">باقي تخصصات الأنف والأذن والحنجرة</div>
       </div>
       <div class="sec-emoji">👂</div>
     </div>
-    <div class="scroll-content" id="gen-list"></div>
+    <div class="scroll-content">
+      <div id="gen-list"></div>
+      <div class="sec-art-hdr" id="gen-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="gen-art"></div>
+    </div>
   </div>
 
   <!-- ══════════════════ BUSINESS ══════════════════ -->
   <div class="screen" id="biz">
     <div class="sec-header">
+      <button class="back-btn" onclick="goTab('upd')">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">BUSINESS</div>
         <div class="sec-title-ar">الاقتصاد الطبي وإدارة الممارسة</div>
       </div>
       <div class="sec-emoji">💼</div>
     </div>
-    <div class="scroll-content" id="biz-list"></div>
+    <div class="scroll-content">
+      <div id="biz-list"></div>
+      <div class="sec-art-hdr" id="biz-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="biz-art"></div>
+    </div>
   </div>
 
   <!-- ══════════════════ PUBLIC ══════════════════ -->
   <div class="screen" id="pub">
     <div class="sec-header">
+      <button class="back-btn" onclick="goTab('upd')">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">PUBLIC</div>
         <div class="sec-title-ar">الإعلام · الجمهور · المشاهير · الاكتشافات</div>
       </div>
       <div class="sec-emoji">📺</div>
     </div>
-    <div class="scroll-content" id="pub-list"></div>
+    <div class="scroll-content">
+      <div id="pub-list"></div>
+      <div class="sec-art-hdr" id="pub-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="pub-art"></div>
+    </div>
   </div>
 
   <!-- ══════════════════ UPDATES ══════════════════ -->
@@ -687,18 +689,18 @@
         <button class="lang-tog-btn" id="lang-en-btn" onclick="setUpdLang('en')">EN</button>
       </div>
     </div>
-    <!-- Section Cards -->
+    <!-- Section Cards → navigate to section screens -->
     <div class="sec-cards-row" id="sec-cards-row">
       <button class="sec-card-btn active" data-sec="all"   onclick="filterSection('all',this)">  <span class="scb-icon">📰</span><span class="scb-count" id="scbc-all">—</span>  <span class="scb-name">الكل</span></button>
-      <button class="sec-card-btn"        data-sec="sinus"  onclick="filterSection('sinus_all',this)"><span class="scb-icon">🫁</span><span class="scb-count" id="scbc-sinus">0</span><span class="scb-name">Sinus</span></button>
-      <button class="sec-card-btn"        data-sec="skull"  onclick="filterSection('skull_base',this)"><span class="scb-icon">🧠</span><span class="scb-count" id="scbc-skull">0</span><span class="scb-name">Skull Base</span></button>
-      <button class="sec-card-btn"        data-sec="voice"  onclick="filterSection('laryngology',this)"><span class="scb-icon">🎙️</span><span class="scb-count" id="scbc-voice">0</span><span class="scb-name">Voice</span></button>
-      <button class="sec-card-btn"        data-sec="sleep"  onclick="filterSection('sleep',this)">  <span class="scb-icon">😴</span><span class="scb-count" id="scbc-sleep">0</span><span class="scb-name">Sleep</span></button>
-      <button class="sec-card-btn"        data-sec="gen"    onclick="filterSection('general_all',this)"><span class="scb-icon">👂</span><span class="scb-count" id="scbc-gen">0</span>  <span class="scb-name">General</span></button>
-      <button class="sec-card-btn"        data-sec="biz"    onclick="filterSection('business',this)"><span class="scb-icon">💼</span><span class="scb-count" id="scbc-biz">0</span><span class="scb-name">Business</span></button>
-      <button class="sec-card-btn"        data-sec="pub"    onclick="filterSection('public',this)">  <span class="scb-icon">📺</span><span class="scb-count" id="scbc-pub">0</span>  <span class="scb-name">Public</span></button>
+      <button class="sec-card-btn"        data-sec="sinus"  onclick="goTab('sinus')">            <span class="scb-icon">🫁</span><span class="scb-count" id="scbc-sinus">0</span><span class="scb-name">Sinus</span></button>
+      <button class="sec-card-btn"        data-sec="skull"  onclick="goTab('sinus')">            <span class="scb-icon">🧠</span><span class="scb-count" id="scbc-skull">0</span><span class="scb-name">Skull Base</span></button>
+      <button class="sec-card-btn"        data-sec="voice"  onclick="goTab('voice')">            <span class="scb-icon">🎙️</span><span class="scb-count" id="scbc-voice">0</span><span class="scb-name">Voice</span></button>
+      <button class="sec-card-btn"        data-sec="sleep"  onclick="goTab('sleep')">            <span class="scb-icon">😴</span><span class="scb-count" id="scbc-sleep">0</span><span class="scb-name">Sleep</span></button>
+      <button class="sec-card-btn"        data-sec="gen"    onclick="goTab('gen')">              <span class="scb-icon">👂</span><span class="scb-count" id="scbc-gen">0</span>    <span class="scb-name">General</span></button>
+      <button class="sec-card-btn"        data-sec="biz"    onclick="goTab('biz')">              <span class="scb-icon">💼</span><span class="scb-count" id="scbc-biz">0</span>    <span class="scb-name">Business</span></button>
+      <button class="sec-card-btn"        data-sec="pub"    onclick="goTab('pub')">              <span class="scb-icon">📺</span><span class="scb-count" id="scbc-pub">0</span>    <span class="scb-name">Public</span></button>
     </div>
-    <!-- Quality chips -->
+    <!-- Quality chips (filter all articles in this screen) -->
     <div class="quality-chips">
       <button class="qchip" id="qchip-jc"    onclick="toggleQualityFilter('jc')">🎯 Journal Club</button>
       <button class="qchip" id="qchip-watch" onclick="toggleQualityFilter('watch')">👁 Watch</button>
@@ -732,14 +734,6 @@
 
 </div><!-- #screen-area -->
 
-<nav class="bottom-nav" id="bottom-nav">
-  <button class="nav-btn active" id="nav-upd"   onclick="goTab('upd')">  <span class="nav-ic">📰</span><span class="nav-badge" id="badge-upd" style="display:none"></span>Updates</button>
-  <button class="nav-btn"        id="nav-sinus"  onclick="goTab('sinus')"><span class="nav-ic">🫁</span><span class="nav-badge" id="badge-sinus" style="display:none"></span>Sinus</button>
-  <button class="nav-btn"        id="nav-voice"  onclick="goTab('voice')"><span class="nav-ic">🎙️</span><span class="nav-badge" id="badge-voice" style="display:none"></span>Voice</button>
-  <button class="nav-btn"        id="nav-gen"    onclick="goTab('gen')">  <span class="nav-ic">👂</span><span class="nav-badge" id="badge-gen" style="display:none"></span>General</button>
-  <button class="nav-btn"        id="nav-biz"    onclick="goTab('biz')">  <span class="nav-ic">💼</span><span class="nav-badge" id="badge-biz" style="display:none"></span>Biz</button>
-  <button class="nav-btn"        id="nav-pub"    onclick="goTab('pub')">  <span class="nav-ic">📺</span><span class="nav-badge" id="badge-pub" style="display:none"></span>Public</button>
-</nav>
 
 </div><!-- #app -->
 
@@ -901,12 +895,21 @@ const ALL_DATA = { sinus: SINUS, voice: VOICE, gen: GEN, biz: BIZ, pub: PUB };
 
 function goTab(sec) {
   if (detailStack.length > 0) return;
-  document.getElementById(currentTab).classList.remove('active');
-  document.getElementById(sec).classList.add('active');
+  if (sec === currentTab) return;
+  const fromEl = document.getElementById(currentTab);
+  const toEl   = document.getElementById(sec);
+  if (sec === 'upd') {
+    // Back to home: section slides right, upd comes from left
+    fromEl.classList.remove('active');
+    toEl.classList.remove('prev');
+    toEl.classList.add('active');
+  } else {
+    // Forward to section: upd slides left (prev), section comes from right
+    fromEl.classList.remove('active');
+    fromEl.classList.add('prev');
+    toEl.classList.add('active');
+  }
   currentTab = sec;
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const nb = document.getElementById('nav-' + sec);
-  if (nb) nb.classList.add('active');
 }
 
 function showDetail(cat, id) {
@@ -941,7 +944,6 @@ function showDetail(cat, id) {
   document.getElementById(fromId).classList.add('prev');
   det.classList.add('active');
   detailStack.push('detail');
-  document.getElementById('bottom-nav').style.display = 'none';
 }
 
 function goBack() {
@@ -962,8 +964,6 @@ function goBack() {
       curEl.style.transform  = '';
     }));
   }, 350);
-  if (detailStack.length === 0) {
-    document.getElementById('bottom-nav').style.display = 'flex';
   }
 }
 
@@ -1095,6 +1095,7 @@ async function loadDate(dateStr) {
     const homeDateEl = document.getElementById('home-upd-date');
     if (homeDateEl) homeDateEl.textContent = `📅 ${dateLabel}`;
     renderPapers(allPapers);
+    renderSectionArticles();
   } catch(err) {
     allPapers = [];
     const homeEl = document.getElementById('home-upd-count');
@@ -1179,12 +1180,6 @@ function updateNavBadges() {
    ['scbc-biz',counts.biz],['scbc-pub',counts.pub]].forEach(([id,n]) => {
     const el = document.getElementById(id); if (el) el.textContent = n;
   });
-  // Bottom nav badges
-  [['badge-upd',counts.all],['badge-sinus',counts.sinus],['badge-voice',counts.voice],
-   ['badge-gen',counts.gen],['badge-biz',counts.biz],['badge-pub',counts.pub]].forEach(([id,n]) => {
-    const el = document.getElementById(id); if (!el) return;
-    el.textContent = n || ''; el.style.display = n > 0 ? 'inline-block' : 'none';
-  });
 }
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -1254,10 +1249,11 @@ function filterPapers(filter, btn) {
 }
 
 function showPaper(idx) {
-  const filtered = getFilteredPapers();
-  const a = filtered[idx];
-  if (!a) return;
+  openPaperDetail(getFilteredPapers()[idx]);
+}
 
+function openPaperDetail(a) {
+  if (!a) return;
   const det = document.getElementById('paper-det');
   det.className = `screen${a.subspecialty === 'business' ? ' biz-paper' : ''}`;
   document.getElementById('pdet-hdr').textContent = a.subspecialty === 'business' ? 'Business' : (SUB_LABELS[a.subspecialty] || 'Paper');
@@ -1354,7 +1350,59 @@ function showPaper(idx) {
   document.getElementById(fromId).classList.add('prev');
   det.classList.add('active');
   detailStack.push('paper-det');
-  document.getElementById('bottom-nav').style.display = 'none';
+}
+
+let sectionPapers = {};
+
+function showSectionPaper(sec, idx) {
+  openPaperDetail((sectionPapers[sec] || [])[idx]);
+}
+
+function renderSectionArticles() {
+  const p = allPapers.filter(a => !a.reject);
+  const SECS = {
+    sinus: p.filter(a => SUBS_SINUS.includes(a.subspecialty)),
+    voice: p.filter(a => a.subspecialty === 'laryngology'),
+    sleep: p.filter(a => a.subspecialty === 'sleep'),
+    gen:   p.filter(a => SUBS_GEN.includes(a.subspecialty)),
+    biz:   p.filter(a => a.subspecialty === 'business'),
+    pub:   p.filter(a => a.subspecialty === 'public'),
+  };
+  sectionPapers = SECS;
+  Object.entries(SECS).forEach(([sec, arts]) => {
+    const artDiv = document.getElementById(sec + '-art');
+    const hdrDiv = document.getElementById(sec + '-art-hdr');
+    if (!artDiv) return;
+    if (hdrDiv) hdrDiv.style.display = arts.length > 0 ? 'block' : 'none';
+    if (arts.length === 0) { artDiv.innerHTML = ''; return; }
+    artDiv.innerHTML = arts.map((a, i) => {
+      const starsN = a.stars || 0;
+      const stars  = '⭐'.repeat(starsN) + '☆'.repeat(5 - starsN);
+      const subLabel = SUB_LABELS[a.subspecialty] || a.subspecialty;
+      const title    = currentLang === 'en' ? (a.title_en || a.title_ar) : (a.title_ar || a.title_en);
+      const summary  = currentLang === 'en' ? a.summary_en : a.summary_ar;
+      const wIcon    = {drug:'💊',device:'🔬',technology:'💡'}[a.watch_type] || '👁';
+      return `
+      <div class="art-card">
+        <div class="art-bar art-bar-${esc(a.subspecialty||'general')}"></div>
+        <div class="art-inner">
+          <div class="art-badges">
+            <span class="bdg bdg-${esc(a.subspecialty||'general')}">${esc(subLabel)}</span>
+            <span class="bdg bdg-stars">${stars}</span>
+            <span class="bdg bdg-conf">${a.confidence || '🟡'}</span>
+            ${a.journal_club ? '<span class="bdg bdg-jc">🎯 JC</span>' : ''}
+            ${a.watch ? `<span class="bdg bdg-watch">${wIcon} Watch</span>` : ''}
+          </div>
+          <div class="art-title">${esc(title)}</div>
+          <div class="art-meta">${esc(a.journal||'')}${a.study_design?' · '+esc(a.study_design):''}${a.pub_date?' · '+esc(a.pub_date):''}</div>
+          ${summary ? `<div class="art-summary">${esc(summary)}</div>` : ''}
+        </div>
+        <div class="art-actions">
+          <button class="art-btn art-btn-read" onclick="showSectionPaper('${sec}',${i})">📖 اقرأ الكامل</button>
+        </div>
+      </div>`;
+    }).join('');
+  });
 }
 
 function answerMCQ(opt) {
