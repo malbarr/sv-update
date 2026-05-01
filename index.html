@@ -469,7 +469,7 @@
       </div>
 
       <!-- UPDATES Card -->
-      <div class="updates-home-card" onclick="showSection('upd')">
+      <div class="updates-home-card" onclick="showUpdates()">
         <div class="uhc-emoji">📰</div>
         <div class="uhc-body">
           <div class="uhc-title">UPDATES</div>
@@ -1062,13 +1062,19 @@ function answerMCQ(opt) {
 }
 
 // Load papers when entering UPDATES screen
-const origShowSection = showSection;
-function showSection(sec) {
-  origShowSection(sec);
-  if (sec === 'upd' && allPapers.length === 0) {
-    document.getElementById('upd-list').innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3></div>`;
+function showUpdates() {
+  const from = document.getElementById(navStack[navStack.length - 1]);
+  const to   = document.getElementById('upd');
+  from.classList.remove('active');
+  from.classList.add('prev');
+  to.classList.add('active');
+  navStack.push('upd');
+
+  const list = document.getElementById('upd-list');
+  if (allPapers.length === 0) {
+    list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3><p>يتم جلب أبحاث اليوم...</p></div>`;
     loadTodayPapers().then(papers => { allPapers = papers; renderPapers(papers); });
-  } else if (sec === 'upd') {
+  } else {
     renderPapers(allPapers);
   }
 }
