@@ -301,9 +301,32 @@
 
     #upd .sec-header { background:linear-gradient(135deg,#0D4F4A,#0F766E,#14B8A6); }
 
+    /* Updates controls row */
+    .upd-controls {
+      display:flex; align-items:center; gap:8px;
+      padding:8px 14px 0; flex-shrink:0;
+    }
+    .upd-date-sel {
+      flex:1; height:32px; border-radius:16px;
+      border:1px solid var(--border); padding:0 10px;
+      font-size:12px; background:var(--surface); color:var(--text);
+      font-family:'Tajawal',sans-serif; outline:none; cursor:pointer;
+    }
+    .upd-lang-grp {
+      display:flex; border-radius:16px; overflow:hidden;
+      border:1px solid var(--border); flex-shrink:0;
+    }
+    .lang-tog-btn {
+      padding:4px 10px; border:none; font-size:12px; font-weight:700;
+      cursor:pointer; background:var(--surface); color:var(--text-muted);
+      font-family:'Tajawal',sans-serif; transition:all .18s;
+    }
+    .lang-tog-btn.active { background:linear-gradient(135deg,#0F766E,#14B8A6); color:#fff; }
+    .upd-count-lbl { font-size:11px; color:var(--text-muted); white-space:nowrap; }
+
     /* Filter tabs */
     .upd-tabs {
-      display:flex; gap:6px; padding:10px 14px 0;
+      display:flex; gap:6px; padding:6px 14px 0;
       overflow-x:auto; scrollbar-width:none; flex-shrink:0;
     }
     .upd-tabs::-webkit-scrollbar { display:none; }
@@ -428,7 +451,7 @@
         <div class="cat-body">
           <div class="cat-title-en">SINUS</div>
           <div class="cat-title-ar">الجيوب الأنفية · قاعدة الجمجمة · الأنف</div>
-          <div class="cat-count">7 تخصصات</div>
+          <div class="cat-count">8 تخصصات</div>
         </div>
         <div class="cat-arrow">›</div>
       </div>
@@ -563,6 +586,17 @@
       </div>
       <div class="sec-emoji">📰</div>
     </div>
+    <!-- Controls row: date picker + language toggle + count -->
+    <div class="upd-controls">
+      <select id="date-picker-upd" class="upd-date-sel" onchange="loadDate(this.value)">
+        <option value="">📅 التاريخ</option>
+      </select>
+      <div class="upd-lang-grp">
+        <button class="lang-tog-btn active" id="lang-ar-btn" onclick="setUpdLang('ar')">ع</button>
+        <button class="lang-tog-btn" id="lang-en-btn" onclick="setUpdLang('en')">EN</button>
+      </div>
+      <span class="upd-count-lbl" id="upd-count-lbl"></span>
+    </div>
     <!-- Filter tabs -->
     <div class="upd-tabs" id="upd-tabs">
       <button class="upd-tab active" data-filter="all" onclick="filterPapers('all',this)">الكل</button>
@@ -572,7 +606,9 @@
       <button class="upd-tab" data-filter="otology"     onclick="filterPapers('otology',this)">👂 Otology</button>
       <button class="upd-tab" data-filter="sleep"       onclick="filterPapers('sleep',this)">😴 Sleep</button>
       <button class="upd-tab" data-filter="head_neck"   onclick="filterPapers('head_neck',this)">🎗️ H&N</button>
-      <button class="upd-tab" data-filter="business"    onclick="filterPapers('business',this)">💼 Business</button>
+      <button class="upd-tab" data-filter="business"    onclick="filterPapers('business',this)">💼 Biz</button>
+      <button class="upd-tab" data-filter="jc"          onclick="filterPapers('jc',this)">🎯 JC</button>
+      <button class="upd-tab" data-filter="watch"       onclick="filterPapers('watch',this)">👁 Watch</button>
     </div>
     <div class="scroll-content" id="upd-list"></div>
   </div>
@@ -624,6 +660,9 @@ const SINUS = [
   { id:'allergy', icon:'🌿', en:'Allergic Rhinology', ar:'التهابات الأنف التحسسية',
     desc:'تشخيص وعلاج التهابات الأنف التحسسية والمناعي من اختبارات الحساسية حتى التحصين المناعي.',
     points:['Allergic Rhinitis: تصنيف ARIA','Skin Prick Test و Specific IgE للتشخيص','Subcutaneous Immunotherapy (SCIT)','Sublingual Immunotherapy (SLIT)','Biologics: Dupilumab / Omalizumab للشديد','Turbinate Reduction للضخامة المزمنة']},
+  { id:'inflam', icon:'🔴', en:'Inflammatory Rhinology (CRS)', ar:'التهاب الجيوب الالتهابي المزمن',
+    desc:'CRS من المنظور الالتهابي — Type 2 inflammation، biologics، والمسارات الالتهابية التي تحدد النمط الفردي لكل مريض.',
+    points:['CRSwNP: يسيطر عليه التهاب Type 2 (Th2/ILC2/IL-4/IL-13)','CRSsNP: يسيطر عليه التهاب Type 1/Type 3 مختلط','Tissue Eosinophilia >10%: مؤشر استجابة للـ biologics','Dupilumab (anti-IL-4R): خط أول للـ biologics في CRSwNP الشديد','Mepolizumab / Benralizumab (anti-IL-5): للـ eosinophilic CRS الصعب','Omalizumab (anti-IgE): للمرضى ذوي IgE مرتفع مع الربو']},
   { id:'smell', icon:'🌸', en:'Olfactory Disorders', ar:'اضطرابات حاسة الشم',
     desc:'فقدان الشم الكلي أو الجزئي أو تشوهه، مع التقييم الموضوعي والعلاج.',
     points:['Anosmia / Hyposmia / Parosmia / Phantosmia','أسباب: كوفيد، فيروسية، رضحية، انسدادية','UPSIT / Sniffin Sticks للتقييم','Olfactory Training: 4 روائح، مرتين يومياً / 12 أسبوع','Systemic Steroids لبعض الحالات الحادة','MRI Olfactory Bulb لتقييم الضمور']},
@@ -871,7 +910,7 @@ if ('serviceWorker' in navigator) {
 
 let allPapers = [];
 let currentFilter = 'all';
-let currentLang = 'ar'; // 'ar' or 'en'
+let currentLang = 'ar';
 
 const SUB_LABELS = {
   rhinology:'🫁 Rhinology', skull_base:'🧠 Skull Base', laryngology:'🎙️ Laryngology',
@@ -881,25 +920,81 @@ const SUB_LABELS = {
 
 const CONF_LABEL = { '🟢':'Practice-Changing', '🟡':'Worth Knowing', '🔴':'Weak Evidence' };
 
-async function loadTodayPapers() {
-  const today = new Date().toISOString().slice(0,10);
+// Open external link safely on iOS standalone and regular browser
+function openExternal(url) {
+  if (window.navigator.standalone) {
+    window.location.href = url;
+  } else {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+}
+
+// Language toggle
+function setUpdLang(lang) {
+  currentLang = lang;
+  document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
+  document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
+  renderPapers(allPapers);
+}
+
+// Populate date picker from index.json
+async function initDatePicker() {
   try {
-    const r = await fetch(`./data/${today}.json?v=${Date.now()}`);
+    const r = await fetch('./data/index.json?v=' + Date.now());
+    if (!r.ok) return;
+    const idx = await r.json();
+    const dates = (idx.dates || []).sort().reverse();
+    const sel = document.getElementById('date-picker-upd');
+    if (!sel) return;
+    sel.innerHTML = dates.map(d =>
+      `<option value="${d}">${d}</option>`
+    ).join('');
+    if (dates.length > 0) sel.value = dates[0];
+  } catch {}
+}
+
+async function loadDate(dateStr) {
+  if (!dateStr) return;
+  const list = document.getElementById('upd-list');
+  if (list) list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3></div>`;
+  allPapers = [];
+  try {
+    const r = await fetch(`./data/${dateStr}.json?v=${Date.now()}`);
     if (!r.ok) throw new Error('no data');
     allPapers = await r.json();
     const published = allPapers.filter(a => !a.reject);
-    document.getElementById('home-upd-count').textContent = `✅ ${published.length} مقالة اليوم`;
-    return published;
+    const countEl = document.getElementById('upd-count-lbl');
+    if (countEl) countEl.textContent = `${published.length} مقالة`;
+    const homeEl = document.getElementById('home-upd-count');
+    if (homeEl) homeEl.textContent = `✅ ${published.length} مقالة`;
+    renderPapers(allPapers);
   } catch {
-    document.getElementById('home-upd-count').textContent = '📭 لا تحديثات اليوم';
-    return [];
+    allPapers = [];
+    const homeEl = document.getElementById('home-upd-count');
+    if (homeEl) homeEl.textContent = '📭 لا تحديثات اليوم';
+    const list = document.getElementById('upd-list');
+    if (list) list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">📭</div><h3>لا توجد مقالات</h3><p>لا توجد بيانات لهذا اليوم.</p></div>`;
   }
+}
+
+async function loadTodayPapers() {
+  const today = new Date().toISOString().slice(0, 10);
+  await initDatePicker();
+  await loadDate(today);
+}
+
+function getFilteredPapers() {
+  const published = allPapers.filter(a => !a.reject);
+  if (currentFilter === 'all') return published;
+  if (currentFilter === 'jc')    return published.filter(a => a.journal_club);
+  if (currentFilter === 'watch') return published.filter(a => a.watch);
+  return published.filter(a => a.subspecialty === currentFilter);
 }
 
 function renderPapers(papers) {
   const container = document.getElementById('upd-list');
-  const published = papers.filter(a => !a.reject);
-  const filtered = currentFilter === 'all' ? published : published.filter(a => a.subspecialty === currentFilter);
+  if (!container) return;
+  const filtered = getFilteredPapers();
 
   if (filtered.length === 0) {
     container.innerHTML = `
@@ -911,14 +1006,14 @@ function renderPapers(papers) {
     return;
   }
 
-  container.innerHTML = filtered.map((a,i) => {
+  container.innerHTML = filtered.map((a, i) => {
     const starsN = a.stars || 0;
     const stars  = '⭐'.repeat(starsN) + '☆'.repeat(5 - starsN);
     const subLabel = SUB_LABELS[a.subspecialty] || a.subspecialty || '';
     const isBiz = a.subspecialty === 'business';
     const badgeClass = isBiz ? 'badge-biz' : 'badge-sub';
-    const title = currentLang === 'ar' ? (a.title_en || a.title_ar) : (a.title_en || '');
-    const summary = currentLang === 'ar' ? a.summary_ar : a.summary_en;
+    const title = currentLang === 'en' ? (a.title_en || a.title_ar) : (a.title_ar || a.title_en);
+    const summary = currentLang === 'en' ? a.summary_en : a.summary_ar;
     return `
       <div class="paper-card" onclick="showPaper(${i})">
         <div class="paper-badges">
@@ -943,8 +1038,7 @@ function filterPapers(filter, btn) {
 }
 
 function showPaper(idx) {
-  const published = allPapers.filter(a => !a.reject);
-  const filtered = currentFilter === 'all' ? published : published.filter(a => a.subspecialty === currentFilter);
+  const filtered = getFilteredPapers();
   const a = filtered[idx];
   if (!a) return;
 
@@ -956,24 +1050,29 @@ function showPaper(idx) {
   const stars = '⭐'.repeat(starsN) + '☆'.repeat(5 - starsN);
   const audioPath = a.pmid ? `./audio/${a.pmid}.mp3` : null;
 
-  const doiLink  = a.doi ? `<a href="https://doi.org/${a.doi}" target="_blank" class="pdet-link link-doi">🔗 DOI</a>` : '';
-  const pmLink   = a.pubmed_url ? `<a href="${a.pubmed_url}" target="_blank" class="pdet-link link-pubmed">📑 PubMed</a>` : '';
-  const pdfLink  = a.pdf_url ? `<a href="${a.pdf_url}" target="_blank" class="pdet-link link-pdf">📄 Free PDF</a>` : '';
+  const doiLink = a.doi
+    ? `<button onclick="openExternal('https://doi.org/${a.doi}')" class="pdet-link link-doi">🔗 DOI</button>` : '';
+  const pmLink = a.pubmed_url
+    ? `<button onclick="openExternal('${a.pubmed_url}')" class="pdet-link link-pubmed">📑 PubMed</button>` : '';
+  const pdfLink = a.pdf_url
+    ? `<button onclick="openExternal('${a.pdf_url}')" class="pdet-link link-pdf">📄 Free PDF</button>` : '';
 
-  const mcqHtml = (a.mcq || []).map((q,qi) => {
-    const opts = currentLang === 'ar' ? (q.options_ar || []) : (q.options_en || []);
-    const question = currentLang === 'ar' ? q.q_ar : q.q_en;
-    const exp = currentLang === 'ar' ? q.explanation_ar : q.explanation_en;
+  const isAr = currentLang === 'ar';
+  const mcqHtml = (a.mcq || []).map((q, qi) => {
+    const opts = isAr ? (q.options_ar || []) : (q.options_en || []);
+    const question = isAr ? q.q_ar : q.q_en;
+    const exp = isAr ? q.explanation_ar : q.explanation_en;
     return `
       <div class="mcq-item">
-        <div class="mcq-q">${qi+1}. ${question}</div>
-        ${opts.map((o,oi) => `<div class="mcq-opt" data-qi="${qi}" data-oi="${oi}" data-ans="${q.answer}" onclick="answerMCQ(this)">${o}</div>`).join('')}
+        <div class="mcq-q">${qi + 1}. ${question}</div>
+        ${opts.map((o, oi) => `<div class="mcq-opt" data-qi="${qi}" data-oi="${oi}" data-ans="${q.answer}" onclick="answerMCQ(this)">${o}</div>`).join('')}
         <div class="mcq-exp" id="exp-${qi}">${exp || ''}</div>
       </div>`;
   }).join('');
 
   const ar = s => s ? `<div class="pdet-text" dir="rtl">${s}</div>` : '';
   const en = s => s ? `<div class="pdet-text" dir="ltr" style="font-family:system-ui">${s}</div>` : '';
+  const txt = (arS, enS) => isAr ? ar(arS) : en(enS);
 
   document.getElementById('pdet-content').innerHTML = `
     <div class="pdet-study">${a.study_design || 'Study'}</div>
@@ -987,41 +1086,34 @@ function showPaper(idx) {
     ${(doiLink || pmLink || pdfLink) ? `<div class="pdet-links">${doiLink}${pmLink}${pdfLink}</div>` : ''}
 
     <div class="pdet-section-label">الملخص · Summary</div>
-    ${ar(a.summary_ar)}
-    ${en(a.summary_en)}
+    ${txt(a.summary_ar, a.summary_en)}
 
     <div class="pdet-section-label">التأثير السريري · Practice Change</div>
-    ${ar(a.practice_change_ar)}
-    ${en(a.practice_change_en)}
+    ${txt(a.practice_change_ar, a.practice_change_en)}
 
     <div class="pdet-section-label">لماذا مهم · Why Important</div>
-    ${ar(a.why_important_ar)}
-    ${en(a.why_important_en)}
+    ${txt(a.why_important_ar, a.why_important_en)}
 
     <div class="pdet-section-label">الأثر المستقبلي · Future Impact</div>
-    ${ar(a.future_impact_ar)}
-    ${en(a.future_impact_en)}
+    ${txt(a.future_impact_ar, a.future_impact_en)}
 
-    ${a.vs_previous_ar || a.vs_previous_en ? `
+    ${(a.vs_previous_ar || a.vs_previous_en) ? `
     <div class="pdet-section-label">مقارنة بالمعرفة السابقة · vs Previous</div>
-    ${ar(a.vs_previous_ar)}
-    ${en(a.vs_previous_en)}` : ''}
+    ${txt(a.vs_previous_ar, a.vs_previous_en)}` : ''}
 
-    ${a.research_gap_ar || a.research_gap_en ? `
+    ${(a.research_gap_ar || a.research_gap_en) ? `
     <div class="pdet-section-label">🔍 الفجوة البحثية · Research Gap</div>
     <div class="pdet-gap-box">
-      <div class="pdet-gap-text" dir="rtl">${a.research_gap_ar || ''}</div>
-      ${a.research_gap_en ? `<div class="pdet-gap-text" dir="ltr" style="margin-top:4px;font-family:system-ui">${a.research_gap_en}</div>` : ''}
+      <div class="pdet-gap-text" dir="${isAr ? 'rtl' : 'ltr'}">${isAr ? (a.research_gap_ar || '') : (a.research_gap_en || '')}</div>
     </div>` : ''}
 
-    ${a.journal_club && a.jc_reason_ar ? `
+    ${a.journal_club ? `
     <div class="pdet-section-label">🎯 Journal Club</div>
-    ${ar(a.jc_reason_ar)}` : ''}
+    ${txt(a.jc_reason_ar, a.jc_reason_en)}` : ''}
 
-    ${a.watch && a.watch_detail_ar ? `
+    ${a.watch ? `
     <div class="pdet-section-label">${a.watch_type==='drug'?'💊':a.watch_type==='device'?'🔬':'💡'} Watch: ${a.watch_type || ''}</div>
-    ${ar(a.watch_detail_ar)}
-    ${en(a.watch_detail_en)}` : ''}
+    ${txt(a.watch_detail_ar, a.watch_detail_en)}` : ''}
 
     ${audioPath ? `
     <div class="pdet-section-label">🎧 الاستماع</div>
@@ -1049,10 +1141,10 @@ function answerMCQ(opt) {
   const oi  = parseInt(opt.dataset.oi);
   const ans = parseInt(opt.dataset.ans);
   const container = opt.closest('.mcq-item');
-  if (container.querySelector('.correct')) return; // already answered
+  if (container.querySelector('.correct')) return;
 
   container.querySelectorAll('.mcq-opt').forEach((o, idx) => {
-    o.classList.remove('correct','wrong');
+    o.classList.remove('correct', 'wrong');
     if (idx === ans) o.classList.add('correct');
     else if (idx === oi && oi !== ans) o.classList.add('wrong');
   });
@@ -1060,7 +1152,7 @@ function answerMCQ(opt) {
   if (expEl) expEl.classList.add('show');
 }
 
-// Load papers when entering UPDATES screen
+// Show UPDATES screen
 function showUpdates() {
   const from = document.getElementById(navStack[navStack.length - 1]);
   const to   = document.getElementById('upd');
@@ -1072,14 +1164,14 @@ function showUpdates() {
   const list = document.getElementById('upd-list');
   if (allPapers.length === 0) {
     list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3><p>يتم جلب أبحاث اليوم...</p></div>`;
-    loadTodayPapers().then(papers => { allPapers = papers; renderPapers(papers); });
+    loadTodayPapers();
   } else {
     renderPapers(allPapers);
   }
 }
 
 // Pre-load on startup
-loadTodayPapers().then(papers => { allPapers = papers; });
+loadTodayPapers();
 </script>
 </body>
 </html>
