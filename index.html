@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SV Update — Sinus &amp; Voice</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0a3d62">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SV Update">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sinus:       #0077B6;
+      --sinus-deep:  #005B8C;
+      --sinus-light: #00B4D8;
+      --sinus-pale:  #E8F6FF;
+      --voice:       #7B2FBE;
+      --voice-deep:  #5B1F96;
+      --voice-light: #A855F7;
+      --voice-pale:  #F3E8FF;
+      --bg:          #F0F4F8;
+      --surface:     #FFFFFF;
+      --text:        #1A202C;
+      --text-muted:  #64748B;
+      --border:      #E2E8F0;
+      --shadow-sm:   0 1px 4px rgba(0,0,0,0.08);
+      --shadow:      0 2px 12px rgba(0,0,0,0.10);
+      --shadow-lg:   0 8px 32px rgba(0,0,0,0.14);
+      --radius:      18px;
+      --radius-sm:   12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Tajawal', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Screen System ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      transform: translateX(105%);
+      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    .screen.active  { transform: translateX(0); }
+    .screen.prev    { transform: translateX(-28%); }
+
+    /* ── Scroll Content ── */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ════════════════════════════════
+       HOME SCREEN
+    ════════════════════════════════ */
+    #home {
+      background: var(--bg);
+      transform: translateX(0);
+    }
+
+    .home-header {
+      background: linear-gradient(145deg, #0a3d62 0%, #1565c0 55%, #0288d1 100%);
+      padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .home-header::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -30px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .app-logo {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .app-name {
+      font-size: 38px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 3px;
+      line-height: 1;
+    }
+    .app-tagline {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 6px;
+      font-weight: 400;
+    }
+    .doctor-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 5px 12px;
+      margin-top: 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* ── Category Cards ── */
+    .cat-card {
+      border-radius: 22px;
+      padding: 22px 20px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.18s, box-shadow 0.18s;
+      -webkit-user-select: none;
+    }
+    .cat-card:active { transform: scale(0.96); box-shadow: var(--shadow); }
+
+    .cat-card.sinus {
+      background: linear-gradient(135deg, #005B8C 0%, #0077B6 50%, #00B4D8 100%);
+    }
+    .cat-card.voice {
+      background: linear-gradient(135deg, #5B1F96 0%, #7B2FBE 50%, #A855F7 100%);
+    }
+    .cat-card::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -20px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .cat-emoji { font-size: 52px; flex-shrink: 0; position: relative; z-index: 1; }
+
+    .cat-body { flex: 1; position: relative; z-index: 1; }
+    .cat-title-en {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 1.5px;
+    }
+    .cat-title-ar {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 3px;
+    }
+    .cat-count {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 2px 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.9);
+      margin-top: 8px;
+    }
+    .cat-arrow {
+      font-size: 28px;
+      color: rgba(255,255,255,0.5);
+      position: relative; z-index: 1;
+    }
+
+    /* ── Info Card (Home) ── */
+    .about-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .about-icon { font-size: 28px; flex-shrink: 0; }
+    .about-body h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .about-body p { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+    /* ════════════════════════════════
+       SECTION HEADER (Sinus / Voice)
+    ════════════════════════════════ */
+    .sec-header {
+      flex-shrink: 0;
+      padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #sinus .sec-header {
+      background: linear-gradient(135deg, #005B8C, #0077B6 55%, #00B4D8);
+    }
+    #voice .sec-header {
+      background: linear-gradient(135deg, #5B1F96, #7B2FBE 55%, #A855F7);
+    }
+
+    .back-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: none; color: #fff;
+      font-size: 22px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.18s;
+    }
+    .back-btn:active { background: rgba(255,255,255,0.28); }
+
+    .sec-title-wrap { flex: 1; }
+    .sec-title-en {
+      font-size: 22px; font-weight: 800;
+      color: #fff; letter-spacing: 1px;
+    }
+    .sec-title-ar { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 1px; }
+    .sec-emoji { font-size: 30px; }
+
+    /* ── Sub Cards ── */
+    .sub-card {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 14px 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      border-right: 4px solid transparent;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .sub-card:active { transform: scale(0.98); box-shadow: none; }
+
+    #sinus .sub-card  { border-right-color: var(--sinus-light); }
+    #voice .sub-card  { border-right-color: var(--voice-light); }
+
+    .sub-icon-wrap {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    #sinus .sub-icon-wrap { background: var(--sinus-pale); }
+    #voice .sub-icon-wrap { background: var(--voice-pale); }
+
+    .sub-texts { flex: 1; }
+    .sub-en { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .sub-ar { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .sub-chevron { color: var(--border); font-size: 20px; }
+
+    /* ════════════════════════════════
+       DETAIL SCREEN
+    ════════════════════════════════ */
+    #detail .sec-header { background: linear-gradient(135deg, #0a3d62, #1565c0); }
+    #detail.sinus-det .sec-header { background: linear-gradient(135deg, #005B8C, #0077B6 55%, #00B4D8); }
+    #detail.voice-det .sec-header { background: linear-gradient(135deg, #5B1F96, #7B2FBE 55%, #A855F7); }
+
+    .detail-top {
+      padding: 24px 18px 12px;
+      text-align: center;
+    }
+    .detail-big-icon {
+      width: 80px; height: 80px;
+      border-radius: 20px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 40px; margin: 0 auto;
+    }
+    .sinus-det .detail-big-icon { background: var(--sinus-pale); }
+    .voice-det .detail-big-icon { background: var(--voice-pale); }
+
+    .detail-name-en {
+      font-size: 18px; font-weight: 800;
+      color: var(--text); margin-top: 12px;
+      line-height: 1.3;
+    }
+    .detail-name-ar {
+      font-size: 14px; color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .divider { height: 1px; background: var(--border); margin: 14px 18px; }
+
+    .detail-desc {
+      padding: 0 18px 8px;
+      font-size: 15px; line-height: 1.85;
+      color: var(--text);
+    }
+
+    .points-label {
+      padding: 10px 18px 8px;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .points-list { padding: 0 18px 28px; }
+    .point-row {
+      display: flex; gap: 10px;
+      margin-bottom: 10px; align-items: flex-start;
+    }
+    .point-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      margin-top: 8px; flex-shrink: 0;
+    }
+    .sinus-det .point-dot { background: var(--sinus); }
+    .voice-det .point-dot { background: var(--voice); }
+    .point-text { font-size: 14px; line-height: 1.65; color: var(--text); }
+
+    /* ── iOS Banner + PWA btn ── */
+    #ios-install-banner {
+      display: none;
+      position: fixed; bottom: 20px;
+      left: 50%; transform: translateX(-50%);
+      background: rgba(10,61,98,0.97); color: #fff;
+      padding: 14px 18px; border-radius: 16px;
+      font-size: 14px; text-align: center;
+      z-index: 9999;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+      max-width: 92%;
+      align-items: center; gap: 10px;
+      direction: rtl; font-family: system-ui, sans-serif;
+    }
+    #pwa-install-btn {
+      display: none;
+      position: fixed; bottom: 20px;
+      left: 50%; transform: translateX(-50%);
+      z-index: 9999;
+      background: linear-gradient(135deg, #0077B6, #7B2FBE);
+      color: #fff; border: none;
+      border-radius: 25px; padding: 14px 28px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      font-family: 'Tajawal', sans-serif;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════════ HOME ══════════════════ -->
+  <div class="screen active" id="home">
+    <div class="home-header">
+      <div class="app-logo">Clinical Reference</div>
+      <div class="app-name">SV Update</div>
+      <div class="app-tagline">Sinus · Voice — جراحة الجيوب والصوت</div>
+      <div class="doctor-chip">👨‍⚕️ Dr. Mohammad H. Al-Bar · IAU / KFHU</div>
+    </div>
+
+    <div class="scroll-content">
+      <div class="cat-card sinus" onclick="showSection('sinus')">
+        <div class="cat-emoji">🫁</div>
+        <div class="cat-body">
+          <div class="cat-title-en">SINUS</div>
+          <div class="cat-title-ar">الجيوب الأنفية وقاعدة الجمجمة والأنف</div>
+          <div class="cat-count">7 تخصصات فرعية</div>
+        </div>
+        <div class="cat-arrow">›</div>
+      </div>
+
+      <div class="cat-card voice" onclick="showSection('voice')">
+        <div class="cat-emoji">🎙️</div>
+        <div class="cat-body">
+          <div class="cat-title-en">VOICE</div>
+          <div class="cat-title-ar">الصوت والحنجرة والمجرى الهوائي</div>
+          <div class="cat-count">9 تخصصات فرعية</div>
+        </div>
+        <div class="cat-arrow">›</div>
+      </div>
+
+      <div class="about-card">
+        <div class="about-icon">ℹ️</div>
+        <div class="about-body">
+          <h3>عن التطبيق</h3>
+          <p>مرجع سريري متخصص في جراحة الجيوب وقاعدة الجمجمة، واضطرابات الصوت والحنجرة — قسم الأنف والأذن والحنجرة، KFHU.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SINUS ══════════════════ -->
+  <div class="screen" id="sinus">
+    <div class="sec-header">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="sec-title-wrap">
+        <div class="sec-title-en">SINUS</div>
+        <div class="sec-title-ar">الجيوب الأنفية · قاعدة الجمجمة · الأنف</div>
+      </div>
+      <div class="sec-emoji">🫁</div>
+    </div>
+    <div class="scroll-content" id="sinus-list"></div>
+  </div>
+
+  <!-- ══════════════════ VOICE ══════════════════ -->
+  <div class="screen" id="voice">
+    <div class="sec-header">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="sec-title-wrap">
+        <div class="sec-title-en">VOICE</div>
+        <div class="sec-title-ar">الصوت · الحنجرة · المجرى الهوائي</div>
+      </div>
+      <div class="sec-emoji">🎙️</div>
+    </div>
+    <div class="scroll-content" id="voice-list"></div>
+  </div>
+
+  <!-- ══════════════════ DETAIL ══════════════════ -->
+  <div class="screen" id="detail">
+    <div class="sec-header">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="sec-title-wrap">
+        <div class="sec-title-en" id="det-hdr">التفاصيل</div>
+      </div>
+    </div>
+    <div class="scroll-content" id="detail-content"></div>
+  </div>
+
+</div>
+
+<!-- iOS Banner -->
+<div id="ios-install-banner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(10,61,98,0.97);color:#fff;padding:14px 18px;border-radius:16px;font-size:14px;text-align:center;z-index:9999;box-shadow:0 4px 24px rgba(0,0,0,0.35);max-width:92%;align-items:center;gap:10px;direction:rtl;font-family:system-ui,sans-serif;">
+  <span style="font-size:22px;">📲</span>
+  <span>لتثبيت التطبيق:<br>اضغط <strong>Share</strong> ثم <strong>Add to Home Screen</strong></span>
+  <button onclick="document.getElementById('ios-install-banner').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:8px;margin-right:4px;">✕</button>
+</div>
+<button id="pwa-install-btn">📲 تثبيت التطبيق</button>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────
+
+const SINUS = [
+  {
+    id:'ess', icon:'🔭',
+    en:'Endoscopic Sinus Surgery (ESS)',
+    ar:'جراحة الجيوب الأنفية بالمنظار',
+    desc:'جراحة الجيوب الأنفية بالمنظار لعلاج التهابات الجيوب المزمنة والسلائل الأنفية، مع الحفاظ على الأغشية المخاطية الطبيعية.',
+    points:[
+      'علاج التهاب الجيوب المزمن (CRS) مع أو بدون سلائل',
+      'FESS: وظيفية / توسيع الفتحات الطبيعية',
+      'Balloon Sinuplasty للحالات المناسبة',
+      'Draf I / II / III (Frontal Drillout) للجيب الجبهي',
+      'Sphenopalatine Artery Ligation (SPAL) لوقف الرعاف',
+      'مضاعفات: CSF leak, Orbital Injury — تجنب مع Navigation',
+    ]
+  },
+  {
+    id:'skull', icon:'🧠',
+    en:'Skull Base Surgery (Endoscopic)',
+    ar:'جراحة قاعدة الجمجمة بالمنظار',
+    desc:'جراحة قاعدة الجمجمة عبر الأنف بالمنظار لاستئصال الأورام وإصلاح تسريب السائل النخاعي (CSF Leak)، بالتعاون مع جراحة الأعصاب.',
+    points:[
+      'Pituitary Adenoma: استئصال ورم الغدة النخامية',
+      'CSF Leak Repair: إصلاح تسريب السائل النخاعي',
+      'Craniopharyngioma / Meningioma / Chordoma',
+      'Esthesioneuroblastoma (Olfactory Neuroblastoma)',
+      'Expanded Endonasal Approach (EEA)',
+      'Nasoseptal Flap لإغلاق قاعدة الجمجمة',
+    ]
+  },
+  {
+    id:'rhino', icon:'👃',
+    en:'Rhinoplasty & Septoplasty',
+    ar:'تجميل الأنف وتقويم الحاجز الأنفي',
+    desc:'تجميل الأنف الوظيفي والجمالي، وتقويم الحاجز الأنفي المعوج (Septoplasty) لتحسين التنفس والمظهر.',
+    points:[
+      'Septoplasty لانحراف الحاجز الأنفي',
+      'Functional Rhinoplasty: تصحيح الصمامات الأنفية',
+      'Cosmetic Rhinoplasty: تعديل شكل الأنف',
+      'Septorhinoplasty: الجمع بين الوظيفي والجمالي',
+      'Spreader Grafts / Alar Batten Grafts',
+      'Revision Rhinoplasty بعد الجراحات السابقة',
+    ]
+  },
+  {
+    id:'allergy', icon:'🌿',
+    en:'Allergic Rhinology',
+    ar:'التهابات الأنف التحسسية',
+    desc:'تشخيص وعلاج التهابات الأنف التحسسية والمناعي، من اختبارات الحساسية حتى التحصين المناعي طويل الأمد.',
+    points:[
+      'Allergic Rhinitis: تصنيف ARIA (متقطع / مستمر)',
+      'Skin Prick Test و Specific IgE للتشخيص',
+      'Subcutaneous Immunotherapy (SCIT)',
+      'Sublingual Immunotherapy (SLIT)',
+      'Biologics: Dupilumab / Omalizumab للحالات الشديدة',
+      'Turbinate Reduction للضخامة المزمنة',
+    ]
+  },
+  {
+    id:'smell', icon:'🌸',
+    en:'Olfactory Disorders',
+    ar:'اضطرابات حاسة الشم',
+    desc:'فقدان حاسة الشم الكلي (Anosmia) أو الجزئي (Hyposmia) أو التشوه (Parosmia)، مع التقييم والعلاج.',
+    points:[
+      'Anosmia / Hyposmia / Parosmia / Phantosmia',
+      'أسباب: ما بعد كوفيد (Post-COVID)، فيروسية، رضحية، انسدادية',
+      'UPSIT / Sniffin Sticks للتقييم الموضوعي',
+      'Olfactory Training: 4 روائح، مرتين يومياً لـ 12 أسبوعاً',
+      'Systemic Steroids لبعض الحالات الحادة',
+      'MRI Olfactory Bulb لتقييم الضمور',
+    ]
+  },
+  {
+    id:'tumors', icon:'🎯',
+    en:'Sinonasal Tumors',
+    ar:'أورام الأنف والجيوب الأنفية',
+    desc:'أورام الأنف والجيوب الأنفية الحميدة والخبيثة، من الورم الحليمي العكسي حتى السرطانات المتقدمة.',
+    points:[
+      'Inverted Papilloma: خطر التحول الخبيث 10% — استئصال كامل',
+      'Squamous Cell Carcinoma (الأكثر شيوعاً)',
+      'Adenocarcinoma & Adenoid Cystic Carcinoma',
+      'Esthesioneuroblastoma: Kadish Staging',
+      'Olfactory Groove Meningioma',
+      'علاج: جراحة ± إشعاع ± كيماوي حسب المرحلة',
+    ]
+  },
+  {
+    id:'orbital', icon:'👁️',
+    en:'Orbital Surgery (Endoscopic)',
+    ar:'جراحة محجر العين بالمنظار',
+    desc:'جراحة محجر العين عبر المنظار لعلاج انسداد القناة الدمعية وتخفيف الضغط المداري والعصب البصري.',
+    points:[
+      'DCR (Dacryocystorhinostomy): دمعة مستمرة أو تكرارية',
+      'Orbital Decompression: جحوظ Graves عند تهديد الرؤية',
+      'Optic Nerve Decompression: فقدان بصري حاد',
+      'Orbital Abscess Drainage: مضاعفة التهاب الجيوب',
+      'Medial Orbital Wall Fracture Repair',
+      'التعاون مع طب العيون في جميع الحالات',
+    ]
+  },
+];
+
+const VOICE = [
+  {
+    id:'phono', icon:'🎙️',
+    en:'Voice Disorders (Phonosurgery)',
+    ar:'اضطرابات الصوت وجراحة الأحبال الصوتية',
+    desc:'اضطرابات الصوت الحميدة وجراحات الأحبال الصوتية الدقيقة تحت التخدير العام (Microlaryngoscopy).',
+    points:[
+      'Vocal Cord Nodules: علاج صوتي أولاً — جراحة للمقاومة',
+      'Vocal Cord Polyp: استئصال جراحي بعد علاج السبب',
+      'Reinke\'s Edema (Smoker\'s Polyp): إيقاف التدخين أساسي',
+      'Vocal Cord Cyst: استئصال مجهري دقيق',
+      'CO₂ Laser / KTP Laser في الجراحة الصوتية',
+      'Voice Therapy ما قبل وبعد الجراحة',
+    ]
+  },
+  {
+    id:'airway', icon:'💨',
+    en:'Airway Surgery',
+    ar:'جراحة المجرى الهوائي',
+    desc:'جراحة المجرى الهوائي لعلاج التضيقات الحنجرية والرغامية بمختلف درجاتها.',
+    points:[
+      'Subglottic / Tracheal Stenosis: تصنيف Cotton-Myer',
+      'Balloon Dilation للتضيقات الخفيفة (Grade I-II)',
+      'Laryngotracheal Reconstruction (LTR): rib graft',
+      'Cricotracheal Resection (CTR) للتضيق الشديد',
+      'Tracheotomy: تقنية + اختيار الأنبوب',
+      'Decannulation Protocol: خطوات الفطام الآمن',
+    ]
+  },
+  {
+    id:'dysphagia', icon:'🍽️',
+    en:'Swallowing Disorders (Dysphagia)',
+    ar:'اضطرابات البلع',
+    desc:'تقييم وعلاج اضطرابات البلع بمختلف أسبابها من الحنجرة والبلعوم والمريء العلوي.',
+    points:[
+      'FEES (Flexible Endoscopic Evaluation): تقييم مباشر',
+      'MBSS (Modified Barium Swallow): ديناميكية البلع',
+      'Zenker\'s Diverticulum: Endoscopic Myotomy',
+      'Cricopharyngeal Dysfunction: Botox / Myotomy',
+      'Globus Pharyngeus: استبعاد LPR والأورام',
+      'علاج صوتي تأهيلي (SLP) لإعادة التدريب',
+    ]
+  },
+  {
+    id:'lpr', icon:'🔥',
+    en:'Laryngopharyngeal Reflux (LPR)',
+    ar:'الارتجاع الحنجري البلعومي',
+    desc:'الارتجاع الحنجري البلعومي وتأثيره على الصوت والحلق والسعال المزمن.',
+    points:[
+      'أعراض: خشونة صوت + سعال مزمن + Globus + تنحنح',
+      'RSI Score ≥ 13 = مشتبه به / RFS ≥ 7 = إيجابي',
+      'Pepsin in saliva (Peptest) — غير حمضي في 40%',
+      'علاج: PPI ضعف الجرعة + Alginate + حمية خاصة',
+      'تجنب: قهوة، شوكولاتة، حمضيات، دهون، كحول',
+      'علاج لـ 3-6 أشهر قبل إعادة التقييم',
+    ]
+  },
+  {
+    id:'neuro', icon:'🧠',
+    en:'Neurolaryngology',
+    ar:'الاضطرابات العصبية للحنجرة',
+    desc:'الاضطرابات العصبية للحنجرة من شلل وتشنج واضطرابات رعاش، وخيارات العلاج الجراحي.',
+    points:[
+      'Unilateral VCP: Medialization (Thyroplasty Type I)',
+      'Bilateral VCP: Cordotomy / Arytenoidectomy',
+      'Spasmodic Dysphonia (AdSD): Botox الدرقية-الطرجهالية',
+      'Essential Vocal Tremor: Botox أو علاج دوائي',
+      'Laryngeal Reinnervation للشلل الأحادي',
+      'Arytenoid Adduction + Thyroplasty للفجوة الكبيرة',
+    ]
+  },
+  {
+    id:'cancer', icon:'🎯',
+    en:'Laryngeal Cancer',
+    ar:'أورام الحنجرة',
+    desc:'أورام الحنجرة الخبيثة مع التركيز على الحفاظ على الصوت والوظيفة.',
+    points:[
+      'تصنيف: Supraglottic / Glottic / Subglottic',
+      'TNM Staging: الخطة العلاجية بناءً عليه',
+      'Transoral Laser Microsurgery (TLM): T1-T2',
+      'Radiotherapy وحدها أو مع Chemotherapy',
+      'Partial Laryngectomy للحفاظ على الوظيفة',
+      'Total Laryngectomy + TEP للحالات T3-T4 المتقدمة',
+    ]
+  },
+  {
+    id:'provoice', icon:'🎤',
+    en:'Professional Voice Care',
+    ar:'رعاية الصوت المهني',
+    desc:'رعاية أصوات المهنيين: المغنين والمعلمين والخطباء والممثلين.',
+    points:[
+      'Stroboscopy: تقييم تذبذب الأحبال الصوتية',
+      'Vocal Hygiene: ترطيب + تقليل Throat Clearing',
+      'VHI (Voice Handicap Index) للتقييم المهني',
+      'Vocal Hemorrhage: توقف فوري عن الغناء + صمت صوتي',
+      'Vocal Cord Augmentation لتحسين الإغلاق',
+      'Pre/Post-performance Assessment',
+    ]
+  },
+  {
+    id:'peds', icon:'👶',
+    en:'Pediatric Laryngology',
+    ar:'حنجرة الأطفال',
+    desc:'حنجرة الأطفال من تلين الحنجرة حتى الأورام والتضيقات الخلقية.',
+    points:[
+      'Laryngomalacia: الأكثر شيوعاً — Supraglottoplasty للشديد',
+      'Subglottic Hemangioma: Propranolol أولاً',
+      'RRP (Recurrent Respiratory Papillomatosis): CO₂ Laser + Cidofovir',
+      'Congenital Laryngeal Web: Endoscopic Lysis',
+      'Bilateral VCP عند الأطفال: Tracheotomy مؤقتة',
+      'Acquired Subglottic Stenosis: LTR في المراحل المناسبة',
+    ]
+  },
+  {
+    id:'osa', icon:'😴',
+    en:'Sleep OSA',
+    ar:'انقطاع التنفس الانسدادي أثناء النوم',
+    desc:'تشخيص انقطاع التنفس الانسدادي أثناء النوم (OSAS) وخيارات علاجه الجراحية وغير الجراحية.',
+    points:[
+      'PSG / Home Sleep Test: AHI للتصنيف (≥30 شديد)',
+      'CPAP: الخيار الأول — Titration للضغط المثالي',
+      'DISE: Drug-Induced Sleep Endoscopy لتحديد الانسداد',
+      'Tonsillectomy + Adenoidectomy: فعالة عند الأطفال',
+      'UPPP (Uvulopalatopharyngoplasty)',
+      'Tongue Base Reduction / Epiglottoplasty',
+      'Hypoglossal Nerve Stimulator (Inspire) — AHI 15-65',
+    ]
+  },
+];
+
+// ── Navigation ──────────────────────────────────────────────────────
+
+let navStack = ['home'];
+let deferredPrompt = null;
+
+function showSection(sec) {
+  const from = document.getElementById('home');
+  const to   = document.getElementById(sec);
+  from.classList.remove('active');
+  from.classList.add('prev');
+  to.classList.add('active');
+  navStack.push(sec);
+}
+
+function showDetail(cat, id) {
+  const data = cat === 'sinus' ? SINUS : VOICE;
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  const det = document.getElementById('detail');
+  det.className = `screen ${cat}-det`;
+
+  document.getElementById('det-hdr').textContent = item.en;
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-top">
+      <div class="detail-big-icon">${item.icon}</div>
+      <div class="detail-name-en">${item.en}</div>
+      <div class="detail-name-ar">${item.ar}</div>
+    </div>
+    <div class="divider"></div>
+    <div class="detail-desc">${item.desc}</div>
+    <div class="points-label">النقاط الرئيسية</div>
+    <div class="points-list">
+      ${item.points.map(p=>`
+        <div class="point-row">
+          <div class="point-dot"></div>
+          <div class="point-text">${p}</div>
+        </div>`).join('')}
+    </div>
+  `;
+
+  const cur = document.getElementById(navStack[navStack.length - 1]);
+  cur.classList.remove('active');
+  cur.classList.add('prev');
+  det.classList.add('active');
+  navStack.push('detail');
+}
+
+function goBack() {
+  if (navStack.length <= 1) return;
+  const cur  = navStack.pop();
+  const prev = navStack[navStack.length - 1];
+
+  const curEl  = document.getElementById(cur);
+  const prevEl = document.getElementById(prev);
+
+  curEl.classList.remove('active');
+  prevEl.classList.remove('prev');
+  prevEl.classList.add('active');
+
+  setTimeout(() => {
+    curEl.classList.remove('prev');
+    curEl.style.transition = 'none';
+    curEl.style.transform  = 'translateX(105%)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        curEl.style.transition = '';
+        curEl.style.transform  = '';
+      });
+    });
+  }, 350);
+}
+
+// ── Build Lists ─────────────────────────────────────────────────────
+
+function buildList(cat, data, containerId) {
+  document.getElementById(containerId).innerHTML = data.map(item => `
+    <div class="sub-card" onclick="showDetail('${cat}','${item.id}')">
+      <div class="sub-icon-wrap">${item.icon}</div>
+      <div class="sub-texts">
+        <div class="sub-en">${item.en}</div>
+        <div class="sub-ar">${item.ar}</div>
+      </div>
+      <div class="sub-chevron">›</div>
+    </div>
+  `).join('');
+}
+
+buildList('sinus', SINUS, 'sinus-list');
+buildList('voice', VOICE, 'voice-list');
+
+// ── PWA ─────────────────────────────────────────────────────────────
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('pwa-install-btn');
+  btn.style.display = 'flex';
+  btn.addEventListener('click', async () => {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    btn.style.display = 'none';
+  });
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwa-install-btn').style.display = 'none';
+  document.getElementById('ios-install-banner').style.display = 'none';
+});
+
+// iOS
+(function() {
+  if (/iP(ad|hone|od)/.test(navigator.userAgent) && !window.navigator.standalone) {
+    document.getElementById('ios-install-banner').style.display = 'flex';
+  }
+})();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
