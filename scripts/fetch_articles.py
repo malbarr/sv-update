@@ -17,14 +17,14 @@ TELEGRAM_CHAT_ID    = os.environ.get("TELEGRAM_CHAT_ID", "1276595563")
 EMAIL_FOR_UNPAYWALL = "sv-update@gmail.com"
 SITE_URL            = "https://malbarr.github.io/sv-update"
 
-MAX_ARTICLES        = 25
+MAX_ARTICLES        = 40
 KEEP_DAYS           = 60
 CLAUDE_MODEL        = "claude-haiku-4-5-20251001"
 
-# Quality thresholds (per user specifications)
-MIN_STARS_PRIORITY  = 3   # sinus/voice/skull_base: keep ≥ 3 stars
-MIN_STARS_GENERAL   = 4   # all others: keep ≥ 4 stars
-PRIORITY_SUBSPECIALTIES = {'rhinology', 'skull_base', 'laryngology'}
+# Quality thresholds
+MIN_STARS_PRIORITY  = 2   # sinus/voice/skull_base: keep ≥ 2 stars
+MIN_STARS_GENERAL   = 3   # all others: keep ≥ 3 stars
+PRIORITY_SUBSPECIALTIES = {'rhinology', 'skull_base', 'laryngology', 'sleep'}
 
 PUBMED_SEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 PUBMED_FETCH_URL  = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
@@ -85,17 +85,17 @@ ENT_QUERY = (
 # ─── PubMed helpers ─────────────────────────────────────────────────────────────
 
 def _pubmed_search(query, reldate, retmax):
-    # Quality filter: RCT, Meta-analysis, Systematic Review, Cohort, Guideline
+    # Quality filter — broad to capture more relevant articles
     quality_filter = (
         " AND ("
         "\"randomized controlled trial\"[pt] OR \"meta-analysis\"[pt] OR "
         "\"systematic review\"[pt] OR \"practice guideline\"[pt] OR "
         "\"clinical trial\"[pt] OR \"cohort study\"[tiab] OR "
-        "\"comparative study\"[pt]"
+        "\"comparative study\"[pt] OR \"observational study\"[pt] OR "
+        "\"multicenter study\"[pt] OR \"journal article\"[pt]"
         ")"
         " AND English[Language]"
         " AND hasabstract[text]"
-        " AND medline[sb]"
     )
     try:
         r = requests.get(PUBMED_SEARCH_URL, params={
@@ -111,8 +111,8 @@ def _pubmed_search(query, reldate, retmax):
 
 
 def search_pubmed():
-    priority_pmids = _pubmed_search(PRIORITY_QUERY, reldate=2, retmax=15)
-    general_pmids  = _pubmed_search(ENT_QUERY,      reldate=1, retmax=MAX_ARTICLES)
+    priority_pmids = _pubmed_search(PRIORITY_QUERY, reldate=3, retmax=30)
+    general_pmids  = _pubmed_search(ENT_QUERY,      reldate=2, retmax=MAX_ARTICLES)
     seen, pmids = set(), []
     for p in priority_pmids + general_pmids:
         if p not in seen:
