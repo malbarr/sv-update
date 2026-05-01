@@ -438,10 +438,22 @@
     }
     .pdet-text { font-size:14px; line-height:1.8; color:var(--text); }
     .pdet-gap-box {
-      background:#FFFBEB; border-right:4px solid #F59E0B;
-      border-radius:10px; padding:10px 12px; margin-top:5px;
+      background:linear-gradient(135deg,#FFFBEB,#FEF3C7);
+      border:1.5px solid #F59E0B;
+      border-radius:14px; padding:14px 16px; margin-top:8px;
+      position:relative; overflow:hidden;
     }
-    .pdet-gap-text { font-size:13px; color:#78350F; line-height:1.6; }
+    .pdet-gap-box::before {
+      content:''; position:absolute; top:0; right:0;
+      width:5px; height:100%; background:#F59E0B; border-radius:0 14px 14px 0;
+    }
+    .pdet-gap-inner-label {
+      display:flex; align-items:center; gap:6px;
+      font-size:11px; font-weight:800; color:#92400E;
+      text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;
+    }
+    .pdet-gap-icon { font-size:16px; }
+    .pdet-gap-text { font-size:14px; color:#78350F; line-height:1.75; font-weight:500; }
     .pdet-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
     .pdet-link {
       display:inline-flex; align-items:center; gap:5px;
@@ -1306,8 +1318,11 @@ function showPaper(idx) {
     ${txt(a.vs_previous_ar, a.vs_previous_en)}` : ''}
 
     ${(a.research_gap_ar || a.research_gap_en) ? `
-    <div class="pdet-section-label">🔍 الفجوة البحثية · Research Gap</div>
     <div class="pdet-gap-box">
+      <div class="pdet-gap-inner-label">
+        <span class="pdet-gap-icon">🔍</span>
+        <span>ما ينقص هذا البحث · Research Gap</span>
+      </div>
       <div class="pdet-gap-text" dir="${isAr ? 'rtl' : 'ltr'}">${isAr ? (a.research_gap_ar || '') : (a.research_gap_en || '')}</div>
     </div>` : ''}
 
