@@ -316,15 +316,25 @@
     .uhc-badge  { display:inline-block; background:rgba(255,255,255,0.2); border-radius:8px; padding:2px 8px; font-size:11px; color:#fff; margin-top:4px; }
 
     .upd-date-bar {
-      display:flex; justify-content:space-between; align-items:center;
-      padding:6px 16px 0; flex-shrink:0;
+      display:flex; align-items:center;
+      padding:8px 10px 0; flex-shrink:0; gap:6px;
     }
-    .upd-date-txt { font-size:13px; font-weight:700; color:var(--text); }
+    .upd-date-center { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .upd-date-txt { font-size:15px; font-weight:800; color:var(--text); }
     .upd-count-pill {
       background:linear-gradient(135deg,#0F766E,#14B8A6);
-      color:#fff; border-radius:12px; padding:2px 10px;
+      color:#fff; border-radius:12px; padding:2px 12px;
       font-size:12px; font-weight:700;
     }
+    .date-nav-btn {
+      width:34px; height:34px; border-radius:50%;
+      border:1.5px solid var(--border); background:var(--surface);
+      font-size:20px; cursor:pointer; color:var(--text-muted);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; transition:all .15s;
+    }
+    .date-nav-btn:active { background:var(--border); }
+    .date-nav-btn:disabled { opacity:0.3; cursor:default; }
     .uhc-arrow  { font-size:22px; color:rgba(255,255,255,0.45); }
 
     #upd .sec-header { background:linear-gradient(135deg,#0D4F4A,#0F766E,#14B8A6); }
@@ -687,14 +697,18 @@
       </div>
       <div class="sec-emoji">📰</div>
     </div>
-    <!-- Date + count bar -->
+    <!-- Date nav bar -->
     <div class="upd-date-bar">
-      <span class="upd-date-txt" id="upd-date-display">📅 ...</span>
-      <span class="upd-count-pill" id="upd-count-lbl">—</span>
+      <button class="date-nav-btn" id="date-prev-btn" onclick="navDate(-1)" title="اليوم السابق">‹</button>
+      <div class="upd-date-center">
+        <span class="upd-date-txt" id="upd-date-display">📅 ...</span>
+        <span class="upd-count-pill" id="upd-count-lbl">—</span>
+      </div>
+      <button class="date-nav-btn" id="date-next-btn" onclick="navDate(1)" title="اليوم التالي">›</button>
     </div>
-    <!-- Controls row: date picker + language toggle -->
+    <!-- Language toggle + hidden date picker -->
     <div class="upd-controls">
-      <select id="date-picker-upd" class="upd-date-sel" onchange="loadDate(this.value)">
+      <select id="date-picker-upd" class="upd-date-sel" onchange="loadDate(this.value)" style="display:none">
         <option value="">📅 اختر يوم</option>
       </select>
       <div class="upd-lang-grp">
@@ -1124,20 +1138,21 @@ function setUpdLang(lang) {
   renderPapers(allPapers);
 }
 
-// Populate date picker from index.json
+// Populate date picker from index.json, returns latest available date
 async function initDatePicker() {
   try {
     const r = await fetch('./data/index.json?v=' + Date.now());
-    if (!r.ok) return;
+    if (!r.ok) return null;
     const idx = await r.json();
     const dates = (idx.dates || []).sort().reverse();
     const sel = document.getElementById('date-picker-upd');
-    if (!sel) return;
+    if (!sel) return dates[0] || null;
     sel.innerHTML = dates.map(d =>
-      `<option value="${d}">${d}</option>`
+      `<option value="${d}">${formatDateAr(d)}</option>`
     ).join('');
     if (dates.length > 0) sel.value = dates[0];
-  } catch {}
+    return dates[0] || null;
+  } catch { return null; }
 }
 
 async function loadDate(dateStr) {
@@ -1181,9 +1196,27 @@ async function loadDate(dateStr) {
 }
 
 async function loadTodayPapers() {
-  const today = new Date().toISOString().slice(0, 10);
-  await initDatePicker();
-  await loadDate(today);
+  const latest = await initDatePicker();
+  const dateToLoad = latest || new Date(Date.now() + 3*3600000).toISOString().slice(0,10);
+  await loadDate(dateToLoad);
+}
+
+function navDate(dir) {
+  const sel = document.getElementById('date-picker-upd');
+  if (!sel || sel.options.length === 0) return;
+  const opts = Array.from(sel.options).map(o => o.value);
+  const cur  = sel.value;
+  const idx  = opts.indexOf(cur);
+  // dates are sorted newest-first, so dir=-1 → older (next index), dir=+1 → newer (prev index)
+  const nextIdx = idx - dir;
+  if (nextIdx < 0 || nextIdx >= opts.length) return;
+  sel.value = opts[nextIdx];
+  loadDate(opts[nextIdx]);
+  // Update nav buttons
+  const prevBtn = document.getElementById('date-prev-btn');
+  const nextBtn = document.getElementById('date-next-btn');
+  if (prevBtn) prevBtn.disabled = (nextIdx >= opts.length - 1);
+  if (nextBtn) nextBtn.disabled = (nextIdx <= 0);
 }
 
 const SUBS_SINUS = ['rhinology'];
