@@ -1,0 +1,38 @@
+name: SV Update Daily
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'   # 4:00 AM UTC = 7:00 AM Riyadh (UTC+3)
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic requests
+
+      - name: Run fetch script
+        run: python scripts/fetch_articles.py
+        env:
+          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Commit and push data
+        run: |
+          git config user.name  "SV Update Bot"
+          git config user.email "sv-update@users.noreply.github.com"
+          git add data/ audio/
+          git diff --staged --quiet || git commit -m "data: $(date +%Y-%m-%d)"
+          git push

@@ -277,6 +277,137 @@
       box-shadow:0 4px 20px rgba(0,0,0,0.3);
       font-family:'Tajawal',sans-serif;
     }
+
+    /* ════════ UPDATES section ════════ */
+    --upd: #0F766E;
+    .updates-home-card {
+      border-radius:18px; padding:16px 18px; margin-bottom:14px;
+      background:linear-gradient(135deg,#0D4F4A,#0F766E,#14B8A6);
+      cursor:pointer; display:flex; align-items:center; gap:14px;
+      box-shadow:var(--shadow-lg); transition:transform .18s;
+      position:relative; overflow:hidden;
+    }
+    .updates-home-card:active { transform:scale(0.97); }
+    .updates-home-card::before {
+      content:''; position:absolute; top:-20px; right:-20px;
+      width:100px; height:100px; border-radius:50%;
+      background:rgba(255,255,255,0.08);
+    }
+    .uhc-emoji  { font-size:36px; flex-shrink:0; position:relative; z-index:1; }
+    .uhc-body   { flex:1; position:relative; z-index:1; }
+    .uhc-title  { font-size:18px; font-weight:800; color:#fff; letter-spacing:1px; }
+    .uhc-sub    { font-size:12px; color:rgba(255,255,255,0.8); margin-top:2px; }
+    .uhc-badge  { display:inline-block; background:rgba(255,255,255,0.2); border-radius:8px; padding:2px 8px; font-size:11px; color:#fff; margin-top:6px; }
+    .uhc-arrow  { font-size:22px; color:rgba(255,255,255,0.45); }
+
+    #upd .sec-header { background:linear-gradient(135deg,#0D4F4A,#0F766E,#14B8A6); }
+
+    /* Filter tabs */
+    .upd-tabs {
+      display:flex; gap:6px; padding:10px 14px 0;
+      overflow-x:auto; scrollbar-width:none; flex-shrink:0;
+    }
+    .upd-tabs::-webkit-scrollbar { display:none; }
+    .upd-tab {
+      padding:6px 14px; border-radius:20px; border:none;
+      font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
+      background:var(--surface); color:var(--text-muted);
+      box-shadow:var(--shadow-sm); transition:all .18s;
+      font-family:'Tajawal',sans-serif;
+    }
+    .upd-tab.active {
+      background:linear-gradient(135deg,#0F766E,#14B8A6);
+      color:#fff; box-shadow:0 2px 8px rgba(15,118,110,0.3);
+    }
+
+    /* Paper cards */
+    .paper-card {
+      background:var(--surface); border-radius:var(--radius-sm);
+      padding:14px; margin-bottom:10px; cursor:pointer;
+      box-shadow:var(--shadow-sm);
+      border-right:4px solid #14B8A6;
+      transition:transform .15s;
+    }
+    .paper-card:active { transform:scale(0.98); }
+
+    .paper-badges { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; align-items:center; }
+    .badge {
+      display:inline-flex; align-items:center; gap:3px;
+      padding:2px 8px; border-radius:8px; font-size:11px; font-weight:600;
+    }
+    .badge-sub  { background:#E0F2FE; color:#0369A1; }
+    .badge-biz  { background:var(--biz-pale); color:var(--biz); }
+    .badge-jc   { background:#FEF9C3; color:#854D0E; }
+    .badge-watch{ background:#DCFCE7; color:#15803D; }
+    .badge-conf { font-size:14px; }
+
+    .stars-row { display:flex; gap:1px; font-size:13px; }
+
+    .paper-title { font-size:13px; font-weight:700; color:var(--text); line-height:1.4; margin-bottom:4px; }
+    .paper-meta  { font-size:11px; color:var(--text-muted); }
+    .paper-summary-short { font-size:12px; color:var(--text); line-height:1.5; margin-top:6px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+    /* Paper Detail Screen */
+    #paper-det .sec-header { background:linear-gradient(135deg,#0D4F4A,#0F766E,#14B8A6); }
+    #paper-det.biz-paper .sec-header { background:linear-gradient(135deg,#9A3412,#C2410C,#F97316); }
+
+    .pdet-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px)); }
+
+    .pdet-study { display:inline-block; background:#F1F5F9; border-radius:8px; padding:3px 10px; font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+
+    .pdet-title { font-size:16px; font-weight:800; color:var(--text); line-height:1.4; margin-bottom:4px; }
+    .pdet-journal { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+
+    .pdet-stars { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    .stars-big { font-size:18px; letter-spacing:1px; }
+    .pdet-conf { font-size:22px; }
+
+    .pdet-section-label {
+      font-size:11px; font-weight:700; color:var(--text-muted);
+      text-transform:uppercase; letter-spacing:1px;
+      margin:14px 0 6px; padding-top:10px;
+      border-top:1px solid var(--border);
+    }
+    .pdet-text { font-size:14px; line-height:1.75; color:var(--text); }
+
+    .pdet-gap-box {
+      background:#FFFBEB; border-right:4px solid #F59E0B;
+      border-radius:10px; padding:10px 12px; margin-top:6px;
+    }
+    .pdet-gap-text { font-size:13px; color:#78350F; line-height:1.6; }
+
+    .pdet-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .pdet-link {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:8px 14px; border-radius:20px; border:none;
+      font-size:12px; font-weight:700; cursor:pointer; text-decoration:none;
+      font-family:'Tajawal',sans-serif; transition:opacity .18s;
+    }
+    .pdet-link:active { opacity:0.7; }
+    .link-doi    { background:#0077B6; color:#fff; }
+    .link-pubmed { background:#E53E3E; color:#fff; }
+    .link-pdf    { background:#15803D; color:#fff; }
+
+    /* Audio player */
+    .audio-wrap { margin-top:10px; background:#F8FAFC; border-radius:12px; padding:10px; }
+    .audio-wrap audio { width:100%; height:36px; }
+
+    /* MCQ */
+    .mcq-block { margin-top:6px; }
+    .mcq-item { background:#F8FAFC; border-radius:10px; padding:12px; margin-bottom:8px; }
+    .mcq-q { font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px; }
+    .mcq-opt { font-size:13px; color:var(--text); margin-bottom:4px; cursor:pointer; padding:4px 6px; border-radius:6px; transition:background .18s; }
+    .mcq-opt:active { background:var(--border); }
+    .mcq-opt.correct { background:#DCFCE7; color:#15803D; font-weight:700; }
+    .mcq-opt.wrong   { background:#FEE2E2; color:#B91C1C; }
+    .mcq-exp { font-size:12px; color:var(--text-muted); margin-top:6px; display:none; line-height:1.5; }
+    .mcq-exp.show { display:block; }
+
+    /* Loading state */
+    .upd-empty { text-align:center; padding:40px 20px; color:var(--text-muted); }
+    .upd-empty-icon { font-size:40px; margin-bottom:10px; }
+    .upd-empty h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text); }
+    .upd-empty p  { font-size:13px; line-height:1.6; }
   </style>
 </head>
 <body>
@@ -335,6 +466,17 @@
           <div class="mini-title-ar">الإعلام والجمهور</div>
           <div class="mini-count">8 موضوعاً</div>
         </div>
+      </div>
+
+      <!-- UPDATES Card -->
+      <div class="updates-home-card" onclick="showSection('upd')">
+        <div class="uhc-emoji">📰</div>
+        <div class="uhc-body">
+          <div class="uhc-title">UPDATES</div>
+          <div class="uhc-sub">تحديث يومي من PubMed · مراجعة أدبية مصفّاة</div>
+          <div class="uhc-badge" id="home-upd-count">⏳ تحميل...</div>
+        </div>
+        <div class="uhc-arrow">›</div>
       </div>
 
       <div class="about-card">
@@ -410,6 +552,41 @@
       <div class="sec-emoji">📺</div>
     </div>
     <div class="scroll-content" id="pub-list"></div>
+  </div>
+
+  <!-- ══════════════════ UPDATES ══════════════════ -->
+  <div class="screen" id="upd">
+    <div class="sec-header">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="sec-title-wrap">
+        <div class="sec-title-en">UPDATES</div>
+        <div class="sec-title-ar">تحديث يومي · PubMed · مراجعة مصفّاة</div>
+      </div>
+      <div class="sec-emoji">📰</div>
+    </div>
+    <!-- Filter tabs -->
+    <div class="upd-tabs" id="upd-tabs">
+      <button class="upd-tab active" data-filter="all" onclick="filterPapers('all',this)">الكل</button>
+      <button class="upd-tab" data-filter="rhinology"   onclick="filterPapers('rhinology',this)">🫁 Sinus</button>
+      <button class="upd-tab" data-filter="skull_base"  onclick="filterPapers('skull_base',this)">🧠 Skull Base</button>
+      <button class="upd-tab" data-filter="laryngology" onclick="filterPapers('laryngology',this)">🎙️ Voice</button>
+      <button class="upd-tab" data-filter="otology"     onclick="filterPapers('otology',this)">👂 Otology</button>
+      <button class="upd-tab" data-filter="sleep"       onclick="filterPapers('sleep',this)">😴 Sleep</button>
+      <button class="upd-tab" data-filter="head_neck"   onclick="filterPapers('head_neck',this)">🎗️ H&N</button>
+      <button class="upd-tab" data-filter="business"    onclick="filterPapers('business',this)">💼 Business</button>
+    </div>
+    <div class="scroll-content" id="upd-list"></div>
+  </div>
+
+  <!-- ══════════════════ PAPER DETAIL ══════════════════ -->
+  <div class="screen" id="paper-det">
+    <div class="sec-header">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="sec-title-wrap">
+        <div class="sec-title-en" id="pdet-hdr">المقالة</div>
+      </div>
+    </div>
+    <div class="pdet-scroll" id="pdet-content"></div>
   </div>
 
   <!-- ══════════════════ DETAIL ══════════════════ -->
@@ -690,6 +867,214 @@ window.addEventListener('appinstalled', () => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
+
+// ── UPDATES System ────────────────────────────────────────────────────────────
+
+let allPapers = [];
+let currentFilter = 'all';
+let currentLang = 'ar'; // 'ar' or 'en'
+
+const SUB_LABELS = {
+  rhinology:'🫁 Rhinology', skull_base:'🧠 Skull Base', laryngology:'🎙️ Laryngology',
+  otology:'👂 Otology', head_neck:'🎗️ Head & Neck', pediatric:'👶 Pediatric',
+  sleep:'😴 Sleep', general:'📋 General', business:'💼 Business', facial_plastics:'✨ Facial'
+};
+
+const CONF_LABEL = { '🟢':'Practice-Changing', '🟡':'Worth Knowing', '🔴':'Weak Evidence' };
+
+async function loadTodayPapers() {
+  const today = new Date().toISOString().slice(0,10);
+  try {
+    const r = await fetch(`./data/${today}.json?v=${Date.now()}`);
+    if (!r.ok) throw new Error('no data');
+    allPapers = await r.json();
+    const published = allPapers.filter(a => !a.reject);
+    document.getElementById('home-upd-count').textContent = `✅ ${published.length} مقالة اليوم`;
+    return published;
+  } catch {
+    document.getElementById('home-upd-count').textContent = '📭 لا تحديثات اليوم';
+    return [];
+  }
+}
+
+function renderPapers(papers) {
+  const container = document.getElementById('upd-list');
+  const published = papers.filter(a => !a.reject);
+  const filtered = currentFilter === 'all' ? published : published.filter(a => a.subspecialty === currentFilter);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="upd-empty">
+        <div class="upd-empty-icon">📭</div>
+        <h3>لا توجد مقالات</h3>
+        <p>لا توجد مقالات في هذا التصنيف اليوم.<br>يتم التحديث تلقائياً كل صباح.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((a,i) => {
+    const starsN = a.stars || 0;
+    const stars  = '⭐'.repeat(starsN) + '☆'.repeat(5 - starsN);
+    const subLabel = SUB_LABELS[a.subspecialty] || a.subspecialty || '';
+    const isBiz = a.subspecialty === 'business';
+    const badgeClass = isBiz ? 'badge-biz' : 'badge-sub';
+    const title = currentLang === 'ar' ? (a.title_en || a.title_ar) : (a.title_en || '');
+    const summary = currentLang === 'ar' ? a.summary_ar : a.summary_en;
+    return `
+      <div class="paper-card" onclick="showPaper(${i})">
+        <div class="paper-badges">
+          <span class="badge ${badgeClass}">${subLabel}</span>
+          ${a.journal_club ? '<span class="badge badge-jc">🎯 JC</span>' : ''}
+          ${a.watch ? `<span class="badge badge-watch">${a.watch_type==='drug'?'💊':a.watch_type==='device'?'🔬':a.watch_type==='technology'?'💡':'🔧'} Watch</span>` : ''}
+          <span class="badge-conf">${a.confidence || '🟡'}</span>
+          <span class="stars-row">${stars}</span>
+        </div>
+        <div class="paper-title">${title}</div>
+        <div class="paper-meta">${a.journal} · ${a.study_design || ''} · ${a.pub_date || ''}</div>
+        ${summary ? `<div class="paper-summary-short">${summary}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function filterPapers(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.upd-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPapers(allPapers);
+}
+
+function showPaper(idx) {
+  const published = allPapers.filter(a => !a.reject);
+  const filtered = currentFilter === 'all' ? published : published.filter(a => a.subspecialty === currentFilter);
+  const a = filtered[idx];
+  if (!a) return;
+
+  const det = document.getElementById('paper-det');
+  det.className = `screen${a.subspecialty === 'business' ? ' biz-paper' : ''}`;
+  document.getElementById('pdet-hdr').textContent = a.subspecialty === 'business' ? 'Business' : (SUB_LABELS[a.subspecialty] || 'Paper');
+
+  const starsN = a.stars || 0;
+  const stars = '⭐'.repeat(starsN) + '☆'.repeat(5 - starsN);
+  const audioPath = a.pmid ? `./audio/${a.pmid}.mp3` : null;
+
+  const doiLink  = a.doi ? `<a href="https://doi.org/${a.doi}" target="_blank" class="pdet-link link-doi">🔗 DOI</a>` : '';
+  const pmLink   = a.pubmed_url ? `<a href="${a.pubmed_url}" target="_blank" class="pdet-link link-pubmed">📑 PubMed</a>` : '';
+  const pdfLink  = a.pdf_url ? `<a href="${a.pdf_url}" target="_blank" class="pdet-link link-pdf">📄 Free PDF</a>` : '';
+
+  const mcqHtml = (a.mcq || []).map((q,qi) => {
+    const opts = currentLang === 'ar' ? (q.options_ar || []) : (q.options_en || []);
+    const question = currentLang === 'ar' ? q.q_ar : q.q_en;
+    const exp = currentLang === 'ar' ? q.explanation_ar : q.explanation_en;
+    return `
+      <div class="mcq-item">
+        <div class="mcq-q">${qi+1}. ${question}</div>
+        ${opts.map((o,oi) => `<div class="mcq-opt" data-qi="${qi}" data-oi="${oi}" data-ans="${q.answer}" onclick="answerMCQ(this)">${o}</div>`).join('')}
+        <div class="mcq-exp" id="exp-${qi}">${exp || ''}</div>
+      </div>`;
+  }).join('');
+
+  const ar = s => s ? `<div class="pdet-text" dir="rtl">${s}</div>` : '';
+  const en = s => s ? `<div class="pdet-text" dir="ltr" style="font-family:system-ui">${s}</div>` : '';
+
+  document.getElementById('pdet-content').innerHTML = `
+    <div class="pdet-study">${a.study_design || 'Study'}</div>
+    <div class="pdet-title">${a.title_en || ''}</div>
+    <div class="pdet-journal">${a.journal} · ${a.pub_date || ''}</div>
+    <div class="pdet-stars">
+      <span class="stars-big">${stars}</span>
+      <span class="pdet-conf">${a.confidence || '🟡'}</span>
+      <span style="font-size:12px;color:var(--text-muted)">${CONF_LABEL[a.confidence] || ''}</span>
+    </div>
+    ${(doiLink || pmLink || pdfLink) ? `<div class="pdet-links">${doiLink}${pmLink}${pdfLink}</div>` : ''}
+
+    <div class="pdet-section-label">الملخص · Summary</div>
+    ${ar(a.summary_ar)}
+    ${en(a.summary_en)}
+
+    <div class="pdet-section-label">التأثير السريري · Practice Change</div>
+    ${ar(a.practice_change_ar)}
+    ${en(a.practice_change_en)}
+
+    <div class="pdet-section-label">لماذا مهم · Why Important</div>
+    ${ar(a.why_important_ar)}
+    ${en(a.why_important_en)}
+
+    <div class="pdet-section-label">الأثر المستقبلي · Future Impact</div>
+    ${ar(a.future_impact_ar)}
+    ${en(a.future_impact_en)}
+
+    ${a.vs_previous_ar || a.vs_previous_en ? `
+    <div class="pdet-section-label">مقارنة بالمعرفة السابقة · vs Previous</div>
+    ${ar(a.vs_previous_ar)}
+    ${en(a.vs_previous_en)}` : ''}
+
+    ${a.research_gap_ar || a.research_gap_en ? `
+    <div class="pdet-section-label">🔍 الفجوة البحثية · Research Gap</div>
+    <div class="pdet-gap-box">
+      <div class="pdet-gap-text" dir="rtl">${a.research_gap_ar || ''}</div>
+      ${a.research_gap_en ? `<div class="pdet-gap-text" dir="ltr" style="margin-top:4px;font-family:system-ui">${a.research_gap_en}</div>` : ''}
+    </div>` : ''}
+
+    ${a.journal_club && a.jc_reason_ar ? `
+    <div class="pdet-section-label">🎯 Journal Club</div>
+    ${ar(a.jc_reason_ar)}` : ''}
+
+    ${a.watch && a.watch_detail_ar ? `
+    <div class="pdet-section-label">${a.watch_type==='drug'?'💊':a.watch_type==='device'?'🔬':'💡'} Watch: ${a.watch_type || ''}</div>
+    ${ar(a.watch_detail_ar)}
+    ${en(a.watch_detail_en)}` : ''}
+
+    ${audioPath ? `
+    <div class="pdet-section-label">🎧 الاستماع</div>
+    <div class="audio-wrap">
+      <audio controls preload="none">
+        <source src="${audioPath}" type="audio/mpeg">
+      </audio>
+    </div>` : ''}
+
+    ${mcqHtml ? `
+    <div class="pdet-section-label">📝 أسئلة MCQ</div>
+    <div class="mcq-block">${mcqHtml}</div>` : ''}
+
+    <div style="height:20px"></div>
+  `;
+
+  const cur = document.getElementById(navStack[navStack.length - 1]);
+  cur.classList.remove('active'); cur.classList.add('prev');
+  det.classList.add('active');
+  navStack.push('paper-det');
+}
+
+function answerMCQ(opt) {
+  const qi  = parseInt(opt.dataset.qi);
+  const oi  = parseInt(opt.dataset.oi);
+  const ans = parseInt(opt.dataset.ans);
+  const container = opt.closest('.mcq-item');
+  if (container.querySelector('.correct')) return; // already answered
+
+  container.querySelectorAll('.mcq-opt').forEach((o, idx) => {
+    o.classList.remove('correct','wrong');
+    if (idx === ans) o.classList.add('correct');
+    else if (idx === oi && oi !== ans) o.classList.add('wrong');
+  });
+  const expEl = document.getElementById(`exp-${qi}`);
+  if (expEl) expEl.classList.add('show');
+}
+
+// Load papers when entering UPDATES screen
+const origShowSection = showSection;
+function showSection(sec) {
+  origShowSection(sec);
+  if (sec === 'upd' && allPapers.length === 0) {
+    document.getElementById('upd-list').innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3></div>`;
+    loadTodayPapers().then(papers => { allPapers = papers; renderPapers(papers); });
+  } else if (sec === 'upd') {
+    renderPapers(allPapers);
+  }
+}
+
+// Pre-load on startup
+loadTodayPapers().then(papers => { allPapers = papers; });
 </script>
 </body>
 </html>
