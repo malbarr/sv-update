@@ -480,7 +480,7 @@
 <div id="app">
 
   <!-- ══════════════════ HOME ══════════════════ -->
-  <div class="screen active" id="home">
+  <div class="screen prev" id="home">
     <div class="home-header">
       <div class="app-logo">ENT Clinical Reference</div>
       <div class="app-name">SV Update</div>
@@ -622,7 +622,7 @@
   </div>
 
   <!-- ══════════════════ UPDATES ══════════════════ -->
-  <div class="screen" id="upd">
+  <div class="screen active" id="upd">
     <div class="sec-header">
       <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
@@ -652,9 +652,7 @@
       <button class="upd-tab" data-filter="rhinology"   onclick="filterPapers('rhinology',this)">🫁 Sinus</button>
       <button class="upd-tab" data-filter="skull_base"  onclick="filterPapers('skull_base',this)">🧠 Skull Base</button>
       <button class="upd-tab" data-filter="laryngology" onclick="filterPapers('laryngology',this)">🎙️ Voice</button>
-      <button class="upd-tab" data-filter="otology"     onclick="filterPapers('otology',this)">👂 Otology</button>
       <button class="upd-tab" data-filter="sleep"       onclick="filterPapers('sleep',this)">😴 Sleep</button>
-      <button class="upd-tab" data-filter="head_neck"   onclick="filterPapers('head_neck',this)">🎗️ H&N</button>
       <button class="upd-tab" data-filter="business"    onclick="filterPapers('business',this)">💼 Biz</button>
       <button class="upd-tab" data-filter="jc"          onclick="filterPapers('jc',this)">🎯 JC</button>
       <button class="upd-tab" data-filter="watch"       onclick="filterPapers('watch',this)">👁 Watch</button>
@@ -838,7 +836,7 @@ const PUB = [
 
 // ── Navigation ──────────────────────────────────────────────────────
 
-let navStack = ['home'];
+let navStack = ['home', 'upd'];
 let deferredPrompt = null;
 
 const ALL_DATA = { sinus: SINUS, voice: VOICE, gen: GEN, biz: BIZ, pub: PUB };
