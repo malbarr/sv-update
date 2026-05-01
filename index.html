@@ -474,92 +474,54 @@
     .upd-empty-icon { font-size:40px; margin-bottom:10px; }
     .upd-empty h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text); }
     .upd-empty p  { font-size:13px; line-height:1.6; }
+
+    /* ════════ BOTTOM NAV ════════ */
+    #screen-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .bottom-nav {
+      display: flex;
+      background: #fff;
+      border-top: 1.5px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      flex-shrink: 0;
+      z-index: 200;
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      color: #94A3B8;
+      padding: 7px 2px 6px;
+      transition: color .15s;
+    }
+    .nav-btn .nav-ic { font-size: 20px; line-height: 1; }
+    .nav-btn.active  { color: #0F766E; }
+    #nav-sinus.active { color: var(--sinus); }
+    #nav-voice.active { color: var(--voice); }
+    #nav-gen.active   { color: var(--gen); }
+    #nav-biz.active   { color: var(--biz); }
+    #nav-pub.active   { color: var(--pub); }
   </style>
 </head>
 <body>
 <div id="app">
-
-  <!-- ══════════════════ HOME ══════════════════ -->
-  <div class="screen prev" id="home">
-    <div class="home-header">
-      <div class="app-logo">ENT Clinical Reference</div>
-      <div class="app-name">SV Update</div>
-      <div class="app-tagline">Sinus · Voice · ENT · Business · Public</div>
-      <div class="doctor-chip">👨‍⚕️ Dr. Mohammad H. Al-Bar · IAU / KFHU</div>
-    </div>
-
-    <div class="scroll-content">
-      <!-- Primary sections -->
-      <div class="cat-card sinus" onclick="showSection('sinus')">
-        <div class="cat-emoji">🫁</div>
-        <div class="cat-body">
-          <div class="cat-title-en">SINUS</div>
-          <div class="cat-title-ar">الجيوب الأنفية · قاعدة الجمجمة · الأنف</div>
-          <div class="cat-count">8 تخصصات</div>
-        </div>
-        <div class="cat-arrow">›</div>
-      </div>
-
-      <div class="cat-card voice" onclick="showSection('voice')">
-        <div class="cat-emoji">🎙️</div>
-        <div class="cat-body">
-          <div class="cat-title-en">VOICE</div>
-          <div class="cat-title-ar">الصوت · الحنجرة · المجرى الهوائي</div>
-          <div class="cat-count">9 تخصصات</div>
-        </div>
-        <div class="cat-arrow">›</div>
-      </div>
-
-      <div class="home-divider">المزيد</div>
-
-      <!-- Secondary sections -->
-      <div class="mini-grid">
-        <div class="mini-card gen" onclick="showSection('gen')">
-          <div class="mini-emoji">👂</div>
-          <div class="mini-title-en">GENERAL</div>
-          <div class="mini-title-ar">باقي الأنف والأذن</div>
-          <div class="mini-count">8 تخصصات</div>
-        </div>
-        <div class="mini-card biz" onclick="showSection('biz')">
-          <div class="mini-emoji">💼</div>
-          <div class="mini-title-en">BUSINESS</div>
-          <div class="mini-title-ar">الاقتصاد الطبي</div>
-          <div class="mini-count">8 موضوعاً</div>
-        </div>
-        <div class="mini-card pub" onclick="showSection('pub')">
-          <div class="mini-emoji">📺</div>
-          <div class="mini-title-en">PUBLIC</div>
-          <div class="mini-title-ar">الإعلام والجمهور</div>
-          <div class="mini-count">8 موضوعاً</div>
-        </div>
-      </div>
-
-      <!-- UPDATES Card -->
-      <div class="updates-home-card" onclick="showUpdates()">
-        <div class="uhc-emoji">📰</div>
-        <div class="uhc-body">
-          <div class="uhc-title">UPDATES</div>
-          <div class="uhc-sub">تحديث يومي من PubMed · مراجعة أدبية مصفّاة</div>
-          <div class="uhc-date" id="home-upd-date">📅 ...</div>
-          <div class="uhc-badge" id="home-upd-count">⏳ تحميل...</div>
-        </div>
-        <div class="uhc-arrow">›</div>
-      </div>
-
-      <div class="about-card">
-        <div class="about-icon">ℹ️</div>
-        <div class="about-body">
-          <h3>عن التطبيق</h3>
-          <p>مرجع سريري شامل في تخصصات الأنف والأذن والحنجرة، الاقتصاد الطبي، والتواصل مع الجمهور — KFHU · IAU.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="screen-area">
 
   <!-- ══════════════════ SINUS ══════════════════ -->
   <div class="screen" id="sinus">
     <div class="sec-header">
-      <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">SINUS</div>
         <div class="sec-title-ar">الجيوب الأنفية · قاعدة الجمجمة · الأنف</div>
@@ -572,7 +534,6 @@
   <!-- ══════════════════ VOICE ══════════════════ -->
   <div class="screen" id="voice">
     <div class="sec-header">
-      <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">VOICE</div>
         <div class="sec-title-ar">الصوت · الحنجرة · المجرى الهوائي</div>
@@ -585,7 +546,6 @@
   <!-- ══════════════════ GENERAL ENT ══════════════════ -->
   <div class="screen" id="gen">
     <div class="sec-header">
-      <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">GENERAL ENT</div>
         <div class="sec-title-ar">باقي تخصصات الأنف والأذن والحنجرة</div>
@@ -598,7 +558,6 @@
   <!-- ══════════════════ BUSINESS ══════════════════ -->
   <div class="screen" id="biz">
     <div class="sec-header">
-      <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">BUSINESS</div>
         <div class="sec-title-ar">الاقتصاد الطبي وإدارة الممارسة</div>
@@ -611,7 +570,6 @@
   <!-- ══════════════════ PUBLIC ══════════════════ -->
   <div class="screen" id="pub">
     <div class="sec-header">
-      <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
         <div class="sec-title-en">PUBLIC</div>
         <div class="sec-title-ar">الإعلام · الجمهور · المشاهير · الاكتشافات</div>
@@ -624,9 +582,8 @@
   <!-- ══════════════════ UPDATES ══════════════════ -->
   <div class="screen active" id="upd">
     <div class="sec-header">
-      <button class="back-btn" onclick="goBack()">‹</button>
       <div class="sec-title-wrap">
-        <div class="sec-title-en">UPDATES</div>
+        <div class="sec-title-en">SV UPDATE</div>
         <div class="sec-title-ar">تحديث يومي · PubMed · مراجعة مصفّاة</div>
       </div>
       <div class="sec-emoji">📰</div>
@@ -684,7 +641,18 @@
     <div class="scroll-content" id="detail-content"></div>
   </div>
 
-</div>
+</div><!-- #screen-area -->
+
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="nav-btn active" id="nav-upd"   onclick="goTab('upd')">  <span class="nav-ic">📰</span>Updates</button>
+  <button class="nav-btn"        id="nav-sinus"  onclick="goTab('sinus')"><span class="nav-ic">🫁</span>Sinus</button>
+  <button class="nav-btn"        id="nav-voice"  onclick="goTab('voice')"><span class="nav-ic">🎙️</span>Voice</button>
+  <button class="nav-btn"        id="nav-gen"    onclick="goTab('gen')">  <span class="nav-ic">👂</span>General</button>
+  <button class="nav-btn"        id="nav-biz"    onclick="goTab('biz')">  <span class="nav-ic">💼</span>Biz</button>
+  <button class="nav-btn"        id="nav-pub"    onclick="goTab('pub')">  <span class="nav-ic">📺</span>Public</button>
+</nav>
+
+</div><!-- #app -->
 
 <div id="ios-install-banner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(10,61,98,0.97);color:#fff;padding:14px 18px;border-radius:16px;font-size:14px;text-align:center;z-index:9999;box-shadow:0 4px 24px rgba(0,0,0,0.35);max-width:92%;align-items:center;gap:10px;direction:rtl;font-family:system-ui,sans-serif;">
   <span style="font-size:22px;">📲</span>
@@ -836,18 +804,20 @@ const PUB = [
 
 // ── Navigation ──────────────────────────────────────────────────────
 
-let navStack = ['home', 'upd'];
+let currentTab  = 'upd';
+let detailStack = [];
 let deferredPrompt = null;
 
 const ALL_DATA = { sinus: SINUS, voice: VOICE, gen: GEN, biz: BIZ, pub: PUB };
 
-function showSection(sec) {
-  const from = document.getElementById(navStack[navStack.length - 1]);
-  const to   = document.getElementById(sec);
-  from.classList.remove('active');
-  from.classList.add('prev');
-  to.classList.add('active');
-  navStack.push(sec);
+function goTab(sec) {
+  if (detailStack.length > 0) return;
+  document.getElementById(currentTab).classList.remove('active');
+  document.getElementById(sec).classList.add('active');
+  currentTab = sec;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById('nav-' + sec);
+  if (nb) nb.classList.add('active');
 }
 
 function showDetail(cat, id) {
@@ -877,19 +847,20 @@ function showDetail(cat, id) {
     </div>
   `;
 
-  const cur = document.getElementById(navStack[navStack.length - 1]);
-  cur.classList.remove('active');
-  cur.classList.add('prev');
+  const fromId = detailStack.length > 0 ? detailStack[detailStack.length-1] : currentTab;
+  document.getElementById(fromId).classList.remove('active');
+  document.getElementById(fromId).classList.add('prev');
   det.classList.add('active');
-  navStack.push('detail');
+  detailStack.push('detail');
+  document.getElementById('bottom-nav').style.display = 'none';
 }
 
 function goBack() {
-  if (navStack.length <= 1) return;
-  const cur  = navStack.pop();
-  const prev = navStack[navStack.length - 1];
+  if (detailStack.length === 0) return;
+  const cur    = detailStack.pop();
+  const prevId = detailStack.length > 0 ? detailStack[detailStack.length-1] : currentTab;
   const curEl  = document.getElementById(cur);
-  const prevEl = document.getElementById(prev);
+  const prevEl = document.getElementById(prevId);
   curEl.classList.remove('active');
   prevEl.classList.remove('prev');
   prevEl.classList.add('active');
@@ -902,6 +873,9 @@ function goBack() {
       curEl.style.transform  = '';
     }));
   }, 350);
+  if (detailStack.length === 0) {
+    document.getElementById('bottom-nav').style.display = 'flex';
+  }
 }
 
 // ── Build Lists ─────────────────────────────────────────────────────
@@ -1218,10 +1192,12 @@ function showPaper(idx) {
     <div style="height:20px"></div>
   `;
 
-  const cur = document.getElementById(navStack[navStack.length - 1]);
-  cur.classList.remove('active'); cur.classList.add('prev');
+  const fromId = detailStack.length > 0 ? detailStack[detailStack.length-1] : currentTab;
+  document.getElementById(fromId).classList.remove('active');
+  document.getElementById(fromId).classList.add('prev');
   det.classList.add('active');
-  navStack.push('paper-det');
+  detailStack.push('paper-det');
+  document.getElementById('bottom-nav').style.display = 'none';
 }
 
 function answerMCQ(opt) {
@@ -1240,23 +1216,7 @@ function answerMCQ(opt) {
   if (expEl) expEl.classList.add('show');
 }
 
-// Show UPDATES screen
-function showUpdates() {
-  const from = document.getElementById(navStack[navStack.length - 1]);
-  const to   = document.getElementById('upd');
-  from.classList.remove('active');
-  from.classList.add('prev');
-  to.classList.add('active');
-  navStack.push('upd');
-
-  const list = document.getElementById('upd-list');
-  if (allPapers.length === 0) {
-    list.innerHTML = `<div class="upd-empty"><div class="upd-empty-icon">⏳</div><h3>جاري التحميل...</h3><p>يتم جلب أبحاث اليوم...</p></div>`;
-    loadTodayPapers();
-  } else {
-    renderPapers(allPapers);
-  }
-}
+function showUpdates() { goTab('upd'); }
 
 // Pre-load on startup
 loadTodayPapers();
