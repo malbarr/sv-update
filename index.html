@@ -180,7 +180,7 @@
     #gen    .sec-header { background:linear-gradient(135deg,#14532D,#15803D,#22C55E); }
     #biz    .sec-header { background:linear-gradient(135deg,#9A3412,#C2410C,#F97316); }
     #pub    .sec-header { background:linear-gradient(135deg,#7F1D1D,#B91C1C,#F87171); }
-    #sleep  .sec-header { background:linear-gradient(135deg,#0C4A6E,#075985,#0284C7); }
+    #sb     .sec-header { background:linear-gradient(135deg,#2D3561,#4A5899,#6B7FD7); }
     .sec-art-hdr {
       font-size:11px; font-weight:700; color:var(--text-muted);
       text-transform:uppercase; letter-spacing:0.8px;
@@ -535,6 +535,9 @@
     .sec-card-btn[data-sec="skull"]  .scb-count { color: #1E40AF; }
     .sec-card-btn[data-sec="skull"].active  { border-color:#1E40AF; background:#EFF6FF; box-shadow:0 4px 14px rgba(30,64,175,0.18); }
 
+    .sec-card-btn[data-sec="sb"]     .scb-count { color: var(--skull); }
+    .sec-card-btn[data-sec="sb"].active     { border-color:var(--skull); background:var(--skull-pale); box-shadow:0 4px 14px rgba(91,110,174,0.18); }
+
     .sec-card-btn[data-sec="voice"]  .scb-count { color: var(--voice); }
     .sec-card-btn[data-sec="voice"].active  { border-color:var(--voice); background:var(--voice-pale); box-shadow:0 4px 14px rgba(123,47,190,0.18); }
 
@@ -607,20 +610,20 @@
     </div>
   </div>
 
-  <!-- ══════════════════ SLEEP ══════════════════ -->
-  <div class="screen" id="sleep">
+  <!-- ══════════════════ SKULL BASE ══════════════════ -->
+  <div class="screen" id="sb">
     <div class="sec-header">
       <button class="back-btn" onclick="goTab('upd')">‹</button>
       <div class="sec-title-wrap">
-        <div class="sec-title-en">SLEEP</div>
-        <div class="sec-title-ar">اضطرابات النوم · انقطاع التنفس الانسدادي</div>
+        <div class="sec-title-en">SKULL BASE</div>
+        <div class="sec-title-ar">قاعدة الجمجمة · السائل النخاعي · الأورام · المدار</div>
       </div>
-      <div class="sec-emoji">😴</div>
+      <div class="sec-emoji">🧠</div>
     </div>
     <div class="scroll-content">
-      <div id="sleep-list"></div>
-      <div class="sec-art-hdr" id="sleep-art-hdr" style="display:none">📰 أحدث المقالات</div>
-      <div id="sleep-art"></div>
+      <div id="sb-list"></div>
+      <div class="sec-art-hdr" id="sb-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="sb-art"></div>
     </div>
   </div>
 
@@ -704,7 +707,7 @@
       <button class="sec-card-btn active" data-sec="all"   onclick="filterSection('all',this)">  <span class="scb-icon">📰</span><span class="scb-count" id="scbc-all">—</span>  <span class="scb-name">الكل</span></button>
       <button class="sec-card-btn"        data-sec="sinus"  onclick="goTab('sinus')">            <span class="scb-icon">🫁</span><span class="scb-count" id="scbc-sinus">0</span><span class="scb-name">Sinus</span></button>
       <button class="sec-card-btn"        data-sec="voice"  onclick="goTab('voice')">            <span class="scb-icon">🎙️</span><span class="scb-count" id="scbc-voice">0</span><span class="scb-name">Voice</span></button>
-      <button class="sec-card-btn"        data-sec="sleep"  onclick="goTab('sleep')">            <span class="scb-icon">😴</span><span class="scb-count" id="scbc-sleep">0</span><span class="scb-name">Sleep</span></button>
+      <button class="sec-card-btn"        data-sec="sb"     onclick="goTab('sb')">              <span class="scb-icon">🧠</span><span class="scb-count" id="scbc-sb">0</span>      <span class="scb-name">Skull Base</span></button>
       <button class="sec-card-btn"        data-sec="gen"    onclick="goTab('gen')">              <span class="scb-icon">👂</span><span class="scb-count" id="scbc-gen">0</span>    <span class="scb-name">General</span></button>
       <button class="sec-card-btn"        data-sec="biz"    onclick="goTab('biz')">              <span class="scb-icon">💼</span><span class="scb-count" id="scbc-biz">0</span>    <span class="scb-name">Business</span></button>
       <button class="sec-card-btn"        data-sec="pub"    onclick="goTab('pub')">              <span class="scb-icon">📺</span><span class="scb-count" id="scbc-pub">0</span>    <span class="scb-name">Public</span></button>
@@ -824,13 +827,29 @@ const VOICE = [
     desc:'حنجرة الأطفال من تلين الحنجرة حتى الأورام والتضيقات الخلقية.',
     points:['Laryngomalacia: الأكثر شيوعاً — Supraglottoplasty للشديد','Subglottic Hemangioma: Propranolol أولاً','RRP: CO₂ Laser + Cidofovir','Congenital Laryngeal Web: Endoscopic Lysis','Bilateral VCP: Tracheotomy مؤقتة','Acquired Subglottic Stenosis: LTR'],
     kw:['pediatric laryngology','laryngomalacia','subglottic hemangioma','RRP','pediatric airway']},
-];
-
-const SLEEP = [
   { id:'osa', icon:'😴', en:'Sleep OSA', ar:'انقطاع التنفس الانسدادي أثناء النوم',
     desc:'تشخيص انقطاع التنفس الانسدادي وخيارات علاجه الجراحية وغير الجراحية.',
-    points:['PSG / Home Sleep Test: AHI للتصنيف (≥30 شديد)','CPAP: الخيار الأول — Titration للضغط المثالي','DISE: تحديد موقع الانسداد أثناء النوم','Tonsillectomy + Adenoidectomy عند الأطفال','UPPP + Tongue Base Reduction','Hypoglossal Nerve Stimulator (Inspire): AHI 15-65'],
-    kw:['sleep apnea','OSA','CPAP','polysomnography','DISE','snoring','hypoglossal','UPPP']},
+    kw:['sleep apnea','OSA','CPAP','polysomnography','DISE','snoring','hypoglossal','UPPP'],
+    points:['PSG / Home Sleep Test: AHI للتصنيف (≥30 شديد)','CPAP: الخيار الأول — Titration للضغط المثالي','DISE: تحديد موقع الانسداد أثناء النوم','Tonsillectomy + Adenoidectomy عند الأطفال','UPPP + Tongue Base Reduction','Hypoglossal Nerve Stimulator (Inspire): AHI 15-65']},
+];
+
+const SB = [
+  { id:'sbsurg', icon:'🧠', en:'Skull Base Surgery (Endoscopic)', ar:'جراحة قاعدة الجمجمة بالمنظار',
+    kw:['skull base','pituitary','meningioma','craniopharyngioma','endoscopic endonasal','esthesioneuroblastoma'],
+    desc:'جراحة قاعدة الجمجمة عبر الأنف بالمنظار لاستئصال الأورام وإصلاح تسريب السائل النخاعي، بالتعاون مع جراحة الأعصاب.',
+    points:['Pituitary Adenoma: استئصال ورم الغدة النخامية','CSF Leak Repair: إصلاح تسريب السائل النخاعي','Craniopharyngioma / Meningioma / Chordoma','Esthesioneuroblastoma — Kadish Staging','Expanded Endonasal Approach (EEA)','Nasoseptal Flap لإغلاق قاعدة الجمجمة']},
+  { id:'csf', icon:'💧', en:'CSF Leak Repair', ar:'إصلاح تسريب السائل النخاعي',
+    kw:['CSF leak','cerebrospinal fluid','encephalocele','intracranial hypertension','beta-2 transferrin'],
+    desc:'تشخيص وإصلاح تسريب السائل النخاعي عبر قاعدة الجمجمة بالمنظار، مع إدارة ارتفاع الضغط داخل الجمجمة.',
+    points:['Beta-2 Transferrin لتأكيد التسريب','CT Cisternography / MRI لتحديد الموقع','إصلاح بالمنظار: Fascia + Nasoseptal Flap + Fibrin Glue','Lumbar Drain مؤقت لتقليل الضغط','IIH (Idiopathic Intracranial Hypertension): علاج قبل الإصلاح','متابعة: الحمى + صداع + سيلان أنف صافٍ']},
+  { id:'sbtumors', icon:'🎯', en:'Sinonasal Tumors & Malignancy', ar:'أورام الأنف والجيوب والأورام الخبيثة',
+    kw:['sinonasal tumor','inverted papilloma','squamous cell carcinoma','sinonasal malignancy','sinonasal cancer'],
+    desc:'أورام الأنف والجيوب الأنفية الحميدة والخبيثة وصلتها بقاعدة الجمجمة.',
+    points:['Inverted Papilloma: خطر تحول خبيث 10%','Squamous Cell Carcinoma: الأكثر شيوعاً','Esthesioneuroblastoma: Kadish Staging','Adenoid Cystic Carcinoma: بطء + انتشار عصبي','Orbital Exenteration عند غزو المدار','علاج: جراحة ± إشعاع ± كيماوي']},
+  { id:'orbital', icon:'👁️', en:'Orbital Surgery (Endoscopic)', ar:'جراحة محجر العين بالمنظار',
+    kw:['orbital','DCR','dacryocystorhinostomy','orbital decompression','optic nerve','orbital abscess'],
+    desc:'جراحة محجر العين عبر المنظار لعلاج انسداد القناة الدمعية وتخفيف الضغط المداري والعصب البصري.',
+    points:['DCR: دمعة مستمرة / تكرارية','Orbital Decompression: جحوظ Graves عند تهديد الرؤية','Optic Nerve Decompression: فقدان بصري حاد','Orbital Abscess Drainage: مضاعفة التهاب الجيوب','Medial Orbital Wall Fracture Repair','التعاون مع طب العيون في جميع الحالات']},
 ];
 
 const GEN = [
@@ -920,7 +939,7 @@ let currentTab  = 'upd';
 let detailStack = [];
 let deferredPrompt = null;
 
-const ALL_DATA = { sinus: SINUS, voice: VOICE, sleep: SLEEP, gen: GEN, biz: BIZ, pub: PUB };
+const ALL_DATA = { sinus: SINUS, voice: VOICE, sb: SB, gen: GEN, biz: BIZ, pub: PUB };
 
 function goTab(sec) {
   if (detailStack.length > 0) return;
@@ -1014,14 +1033,14 @@ function buildList(cat, data, containerId) {
 
 buildList('sinus', SINUS, 'sinus-list');
 buildList('voice', VOICE, 'voice-list');
-buildList('sleep', SLEEP, 'sleep-list');
+buildList('sb', SB, 'sb-list');
 buildList('gen',   GEN,   'gen-list');
 buildList('biz',   BIZ,   'biz-list');
 buildList('pub',   PUB,   'pub-list');
 
 function updateSubCardCounts() {
   const p = allPapers.filter(a => !a.reject);
-  const allSections = { sinus: SINUS, voice: VOICE, sleep: SLEEP, gen: GEN, biz: BIZ, pub: PUB };
+  const allSections = { sinus: SINUS, voice: VOICE, sb: SB, gen: GEN, biz: BIZ, pub: PUB };
   Object.entries(allSections).forEach(([cat, items]) => {
     items.forEach(item => {
       const el = document.getElementById('sac-' + cat + '-' + item.id);
@@ -1167,16 +1186,16 @@ async function loadTodayPapers() {
   await loadDate(today);
 }
 
-const SUBS_SINUS = ['rhinology','skull_base'];
+const SUBS_SINUS = ['rhinology'];
 const SUBS_VOICE = ['laryngology','sleep'];
+const SUBS_SB    = ['skull_base'];
 const SUBS_GEN   = ['general','head_neck','otology','pediatric','facial_plastics'];
 
 const FILTER_FN = {
   all:         a => true,
   sinus_all:   a => SUBS_SINUS.includes(a.subspecialty),
-  skull_base:  a => a.subspecialty === 'skull_base',
-  laryngology: a => a.subspecialty === 'laryngology',
-  sleep:       a => a.subspecialty === 'sleep',
+  voice_all:   a => SUBS_VOICE.includes(a.subspecialty),
+  sb_all:      a => SUBS_SB.includes(a.subspecialty),
   general_all: a => SUBS_GEN.includes(a.subspecialty),
   business:    a => a.subspecialty === 'business',
   public:      a => a.subspecialty === 'public',
@@ -1217,15 +1236,15 @@ function updateNavBadges() {
   const counts = {
     all:   p.length,
     sinus: p.filter(a => SUBS_SINUS.includes(a.subspecialty)).length,
-    voice: p.filter(a => a.subspecialty === 'laryngology').length,
-    sleep: p.filter(a => a.subspecialty === 'sleep').length,
+    voice: p.filter(a => SUBS_VOICE.includes(a.subspecialty)).length,
+    sb:    p.filter(a => SUBS_SB.includes(a.subspecialty)).length,
     gen:   p.filter(a => SUBS_GEN.includes(a.subspecialty)).length,
     biz:   p.filter(a => a.subspecialty === 'business').length,
     pub:   p.filter(a => a.subspecialty === 'public').length,
   };
   // Section card counts
-  [['scbc-all',counts.all],['scbc-sinus',counts.sinus],   ['scbc-voice',counts.voice],['scbc-sleep',counts.sleep],['scbc-gen',counts.gen],
-   ['scbc-biz',counts.biz],['scbc-pub',counts.pub]].forEach(([id,n]) => {
+  [['scbc-all',counts.all],['scbc-sinus',counts.sinus],['scbc-voice',counts.voice],
+   ['scbc-sb',counts.sb],['scbc-gen',counts.gen],['scbc-biz',counts.biz],['scbc-pub',counts.pub]].forEach(([id,n]) => {
     const el = document.getElementById(id); if (el) el.textContent = n;
   });
 }
@@ -1410,8 +1429,8 @@ function renderSectionArticles() {
   const p = allPapers.filter(a => !a.reject);
   const SECS = {
     sinus: p.filter(a => SUBS_SINUS.includes(a.subspecialty)),
-    voice: p.filter(a => a.subspecialty === 'laryngology'),
-    sleep: p.filter(a => a.subspecialty === 'sleep'),
+    voice: p.filter(a => SUBS_VOICE.includes(a.subspecialty)),
+    sb:    p.filter(a => SUBS_SB.includes(a.subspecialty)),
     gen:   p.filter(a => SUBS_GEN.includes(a.subspecialty)),
     biz:   p.filter(a => a.subspecialty === 'business'),
     pub:   p.filter(a => a.subspecialty === 'public'),
