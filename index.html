@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -230,6 +230,12 @@
     .sub-texts  { flex:1; }
     .sub-en     { font-size:13px; font-weight:700; color:var(--text); line-height:1.3; }
     .sub-ar     { font-size:12px; color:var(--text-muted); margin-top:2px; }
+    .sub-art-count {
+      font-size: 10px; font-weight: 800; color: #fff;
+      background: #0F766E; border-radius: 10px;
+      padding: 1px 7px; margin-right: 4px;
+      display: none;
+    }
     .sub-chevron{ color:var(--border); font-size:20px; }
 
     /* ════════ DETAIL ════════ */
@@ -611,7 +617,11 @@
       </div>
       <div class="sec-emoji">😴</div>
     </div>
-    <div class="scroll-content" id="sleep-art"></div>
+    <div class="scroll-content">
+      <div id="sleep-list"></div>
+      <div class="sec-art-hdr" id="sleep-art-hdr" style="display:none">📰 أحدث المقالات</div>
+      <div id="sleep-art"></div>
+    </div>
   </div>
 
   <!-- ══════════════════ GENERAL ENT ══════════════════ -->
@@ -693,7 +703,6 @@
     <div class="sec-cards-row" id="sec-cards-row">
       <button class="sec-card-btn active" data-sec="all"   onclick="filterSection('all',this)">  <span class="scb-icon">📰</span><span class="scb-count" id="scbc-all">—</span>  <span class="scb-name">الكل</span></button>
       <button class="sec-card-btn"        data-sec="sinus"  onclick="goTab('sinus')">            <span class="scb-icon">🫁</span><span class="scb-count" id="scbc-sinus">0</span><span class="scb-name">Sinus</span></button>
-      <button class="sec-card-btn"        data-sec="skull"  onclick="goTab('sinus')">            <span class="scb-icon">🧠</span><span class="scb-count" id="scbc-skull">0</span><span class="scb-name">Skull Base</span></button>
       <button class="sec-card-btn"        data-sec="voice"  onclick="goTab('voice')">            <span class="scb-icon">🎙️</span><span class="scb-count" id="scbc-voice">0</span><span class="scb-name">Voice</span></button>
       <button class="sec-card-btn"        data-sec="sleep"  onclick="goTab('sleep')">            <span class="scb-icon">😴</span><span class="scb-count" id="scbc-sleep">0</span><span class="scb-name">Sleep</span></button>
       <button class="sec-card-btn"        data-sec="gen"    onclick="goTab('gen')">              <span class="scb-icon">👂</span><span class="scb-count" id="scbc-gen">0</span>    <span class="scb-name">General</span></button>
@@ -748,60 +757,80 @@
 // ── DATA ────────────────────────────────────────────────────────────
 
 const SINUS = [
-  { id:'ess', icon:'🔭', en:'Endoscopic Sinus Surgery (ESS)', ar:'جراحة الجيوب الأنفية بالمنظار',
-    desc:'جراحة الجيوب الأنفية بالمنظار لعلاج التهابات الجيوب المزمنة والسلائل الأنفية مع الحفاظ على الأغشية المخاطية.',
-    points:['علاج التهاب الجيوب المزمن (CRS) مع أو بدون سلائل','FESS: وظيفية / توسيع الفتحات الطبيعية','Balloon Sinuplasty للحالات المناسبة','Draf I/II/III (Frontal Drillout) للجيب الجبهي','Sphenopatine Artery Ligation (SPAL) لوقف الرعاف','Navigation تقليل مخاطر: CSF Leak, Orbital Injury']},
-  { id:'skull', icon:'🧠', en:'Skull Base Surgery (Endoscopic)', ar:'جراحة قاعدة الجمجمة بالمنظار',
-    desc:'جراحة قاعدة الجمجمة عبر الأنف بالمنظار لاستئصال الأورام وإصلاح تسريب السائل النخاعي، بالتعاون مع جراحة الأعصاب.',
-    points:['Pituitary Adenoma: استئصال ورم الغدة النخامية','CSF Leak Repair: إصلاح تسريب السائل النخاعي','Craniopharyngioma / Meningioma / Chordoma','Esthesioneuroblastoma — Kadish Staging','Expanded Endonasal Approach (EEA)','Nasoseptal Flap لإغلاق قاعدة الجمجمة']},
-  { id:'rhino', icon:'👃', en:'Rhinoplasty & Septoplasty', ar:'تجميل الأنف وتقويم الحاجز الأنفي',
-    desc:'تجميل الأنف الوظيفي والجمالي، وتقويم الحاجز الأنفي المعوج لتحسين التنفس والمظهر.',
-    points:['Septoplasty لانحراف الحاجز الأنفي','Functional Rhinoplasty: تصحيح الصمامات الأنفية','Cosmetic Rhinoplasty: تعديل شكل الأنف','Septorhinoplasty: الوظيفي + الجمالي','Spreader Grafts / Alar Batten Grafts','Revision Rhinoplasty بعد الجراحات السابقة']},
-  { id:'allergy', icon:'🌿', en:'Allergic Rhinology', ar:'التهابات الأنف التحسسية',
-    desc:'تشخيص وعلاج التهابات الأنف التحسسية والمناعي من اختبارات الحساسية حتى التحصين المناعي.',
-    points:['Allergic Rhinitis: تصنيف ARIA','Skin Prick Test و Specific IgE للتشخيص','Subcutaneous Immunotherapy (SCIT)','Sublingual Immunotherapy (SLIT)','Biologics: Dupilumab / Omalizumab للشديد','Turbinate Reduction للضخامة المزمنة']},
   { id:'inflam', icon:'🔴', en:'Inflammatory Rhinology (CRS)', ar:'التهاب الجيوب الالتهابي المزمن',
     desc:'CRS من المنظور الالتهابي — Type 2 inflammation، biologics، والمسارات الالتهابية التي تحدد النمط الفردي لكل مريض.',
-    points:['CRSwNP: يسيطر عليه التهاب Type 2 (Th2/ILC2/IL-4/IL-13)','CRSsNP: يسيطر عليه التهاب Type 1/Type 3 مختلط','Tissue Eosinophilia >10%: مؤشر استجابة للـ biologics','Dupilumab (anti-IL-4R): خط أول للـ biologics في CRSwNP الشديد','Mepolizumab / Benralizumab (anti-IL-5): للـ eosinophilic CRS الصعب','Omalizumab (anti-IgE): للمرضى ذوي IgE مرتفع مع الربو']},
+    points:['CRSwNP: يسيطر عليه التهاب Type 2 (Th2/ILC2/IL-4/IL-13)','CRSsNP: يسيطر عليه التهاب Type 1/Type 3 مختلط','Tissue Eosinophilia >10%: مؤشر استجابة للـ biologics','Dupilumab (anti-IL-4R): خط أول للـ biologics في CRSwNP الشديد','Mepolizumab / Benralizumab (anti-IL-5): للـ eosinophilic CRS الصعب','Omalizumab (anti-IgE): للمرضى ذوي IgE مرتفع مع الربو'],
+    kw:['rhinosinusitis','CRS','nasal polyp','eosinophil','dupilumab','sinusitis']},
+  { id:'ess', icon:'🔭', en:'Endoscopic Sinus Surgery (ESS)', ar:'جراحة الجيوب الأنفية بالمنظار',
+    desc:'جراحة الجيوب الأنفية بالمنظار لعلاج التهابات الجيوب المزمنة والسلائل الأنفية مع الحفاظ على الأغشية المخاطية.',
+    points:['علاج التهاب الجيوب المزمن (CRS) مع أو بدون سلائل','FESS: وظيفية / توسيع الفتحات الطبيعية','Balloon Sinuplasty للحالات المناسبة','Draf I/II/III (Frontal Drillout) للجيب الجبهي','Sphenopatine Artery Ligation (SPAL) لوقف الرعاف','Navigation تقليل مخاطر: CSF Leak, Orbital Injury'],
+    kw:['endoscopic sinus','FESS','ESS','balloon sinuplasty','frontal sinus','sphenopalatine']},
+  { id:'skull', icon:'🧠', en:'Skull Base Surgery (Endoscopic)', ar:'جراحة قاعدة الجمجمة بالمنظار',
+    desc:'جراحة قاعدة الجمجمة عبر الأنف بالمنظار لاستئصال الأورام وإصلاح تسريب السائل النخاعي، بالتعاون مع جراحة الأعصاب.',
+    points:['Pituitary Adenoma: استئصال ورم الغدة النخامية','CSF Leak Repair: إصلاح تسريب السائل النخاعي','Craniopharyngioma / Meningioma / Chordoma','Esthesioneuroblastoma — Kadish Staging','Expanded Endonasal Approach (EEA)','Nasoseptal Flap لإغلاق قاعدة الجمجمة'],
+    kw:['skull base','pituitary','CSF leak','meningioma','craniopharyngioma','endoscopic endonasal']},
+  { id:'rhino', icon:'👃', en:'Rhinoplasty & Septoplasty', ar:'تجميل الأنف وتقويم الحاجز الأنفي',
+    desc:'تجميل الأنف الوظيفي والجمالي، وتقويم الحاجز الأنفي المعوج لتحسين التنفس والمظهر.',
+    points:['Septoplasty لانحراف الحاجز الأنفي','Functional Rhinoplasty: تصحيح الصمامات الأنفية','Cosmetic Rhinoplasty: تعديل شكل الأنف','Septorhinoplasty: الوظيفي + الجمالي','Spreader Grafts / Alar Batten Grafts','Revision Rhinoplasty بعد الجراحات السابقة'],
+    kw:['rhinoplasty','septoplasty','deviated septum','nasal valve','septorhinoplasty']},
+  { id:'allergy', icon:'🌿', en:'Allergic Rhinology', ar:'التهابات الأنف التحسسية',
+    desc:'تشخيص وعلاج التهابات الأنف التحسسية والمناعي من اختبارات الحساسية حتى التحصين المناعي.',
+    points:['Allergic Rhinitis: تصنيف ARIA','Skin Prick Test و Specific IgE للتشخيص','Subcutaneous Immunotherapy (SCIT)','Sublingual Immunotherapy (SLIT)','Biologics: Dupilumab / Omalizumab للشديد','Turbinate Reduction للضخامة المزمنة'],
+    kw:['allergic rhinitis','allergy','immunotherapy','SCIT','SLIT','sensitization']},
   { id:'smell', icon:'🌸', en:'Olfactory Disorders', ar:'اضطرابات حاسة الشم',
     desc:'فقدان الشم الكلي أو الجزئي أو تشوهه، مع التقييم الموضوعي والعلاج.',
-    points:['Anosmia / Hyposmia / Parosmia / Phantosmia','أسباب: كوفيد، فيروسية، رضحية، انسدادية','UPSIT / Sniffin Sticks للتقييم','Olfactory Training: 4 روائح، مرتين يومياً / 12 أسبوع','Systemic Steroids لبعض الحالات الحادة','MRI Olfactory Bulb لتقييم الضمور']},
+    points:['Anosmia / Hyposmia / Parosmia / Phantosmia','أسباب: كوفيد، فيروسية، رضحية، انسدادية','UPSIT / Sniffin Sticks للتقييم','Olfactory Training: 4 روائح، مرتين يومياً / 12 أسبوع','Systemic Steroids لبعض الحالات الحادة','MRI Olfactory Bulb لتقييم الضمور'],
+    kw:['olfactory','anosmia','parosmia','hyposmia','smell','olfaction']},
   { id:'tumors', icon:'🎯', en:'Sinonasal Tumors', ar:'أورام الأنف والجيوب الأنفية',
     desc:'أورام الأنف والجيوب الأنفية الحميدة والخبيثة، من الورم الحليمي العكسي حتى السرطانات المتقدمة.',
-    points:['Inverted Papilloma: خطر تحول خبيث 10% — استئصال كامل','Squamous Cell Carcinoma (الأكثر شيوعاً)','Adenocarcinoma & Adenoid Cystic Carcinoma','Esthesioneuroblastoma: Kadish Staging','Olfactory Groove Meningioma','علاج: جراحة ± إشعاع ± كيماوي حسب المرحلة']},
+    points:['Inverted Papilloma: خطر تحول خبيث 10% — استئصال كامل','Squamous Cell Carcinoma (الأكثر شيوعاً)','Adenocarcinoma & Adenoid Cystic Carcinoma','Esthesioneuroblastoma: Kadish Staging','Olfactory Groove Meningioma','علاج: جراحة ± إشعاع ± كيماوي حسب المرحلة'],
+    kw:['sinonasal tumor','inverted papilloma','sinonasal cancer','nasal malignancy','ethmoid tumor']},
   { id:'orbital', icon:'👁️', en:'Orbital Surgery (Endoscopic)', ar:'جراحة محجر العين بالمنظار',
     desc:'جراحة محجر العين عبر المنظار لعلاج انسداد القناة الدمعية وتخفيف الضغط المداري والعصب البصري.',
-    points:['DCR: دمعة مستمرة / تكرارية','Orbital Decompression: جحوظ Graves عند تهديد الرؤية','Optic Nerve Decompression: فقدان بصري حاد','Orbital Abscess Drainage: مضاعفة التهاب الجيوب','Medial Orbital Wall Fracture Repair','التعاون مع طب العيون في جميع الحالات']},
+    points:['DCR: دمعة مستمرة / تكرارية','Orbital Decompression: جحوظ Graves عند تهديد الرؤية','Optic Nerve Decompression: فقدان بصري حاد','Orbital Abscess Drainage: مضاعفة التهاب الجيوب','Medial Orbital Wall Fracture Repair','التعاون مع طب العيون في جميع الحالات'],
+    kw:['orbital','DCR','dacryocystorhinostomy','orbital decompression','optic nerve']},
 ];
 
 const VOICE = [
   { id:'phono', icon:'🎙️', en:'Voice Disorders (Phonosurgery)', ar:'اضطرابات الصوت وجراحة الأحبال الصوتية',
     desc:'اضطرابات الصوت الحميدة وجراحات الأحبال الصوتية الدقيقة تحت التخدير العام.',
-    points:['Vocal Cord Nodules: علاج صوتي أولاً','Vocal Cord Polyp: استئصال جراحي بعد علاج السبب','Reinke\'s Edema: إيقاف التدخين أساسي','Vocal Cord Cyst: استئصال مجهري دقيق','CO₂ Laser / KTP Laser في الجراحة الصوتية','Voice Therapy قبل وبعد الجراحة']},
+    points:['Vocal Cord Nodules: علاج صوتي أولاً','Vocal Cord Polyp: استئصال جراحي بعد علاج السبب','Reinke\'s Edema: إيقاف التدخين أساسي','Vocal Cord Cyst: استئصال مجهري دقيق','CO₂ Laser / KTP Laser في الجراحة الصوتية','Voice Therapy قبل وبعد الجراحة'],
+    kw:['vocal cord','vocal fold','phonosurgery','voice disorder','laryngoscopy','Reinke','polyp nodule']},
   { id:'airway', icon:'💨', en:'Airway Surgery', ar:'جراحة المجرى الهوائي',
     desc:'جراحة المجرى الهوائي لعلاج التضيقات الحنجرية والرغامية بمختلف درجاتها.',
-    points:['Subglottic/Tracheal Stenosis: تصنيف Cotton-Myer','Balloon Dilation للتضيقات Grade I-II','Laryngotracheal Reconstruction (LTR): rib graft','Cricotracheal Resection (CTR) للشديد','Tracheotomy: تقنية + اختيار الأنبوب','Decannulation Protocol: خطوات الفطام الآمن']},
+    points:['Subglottic/Tracheal Stenosis: تصنيف Cotton-Myer','Balloon Dilation للتضيقات Grade I-II','Laryngotracheal Reconstruction (LTR): rib graft','Cricotracheal Resection (CTR) للشديد','Tracheotomy: تقنية + اختيار الأنبوب','Decannulation Protocol: خطوات الفطام الآمن'],
+    kw:['airway surgery','subglottic stenosis','tracheal stenosis','tracheotomy','laryngotracheal']},
   { id:'dysphagia', icon:'🍽️', en:'Swallowing Disorders (Dysphagia)', ar:'اضطرابات البلع',
     desc:'تقييم وعلاج اضطرابات البلع من الحنجرة والبلعوم والمريء العلوي.',
-    points:['FEES: تقييم مباشر بالمنظار المرن','MBSS: ديناميكية البلع بالأشعة','Zenker\'s Diverticulum: Endoscopic Myotomy','Cricopharyngeal Dysfunction: Botox / Myotomy','Globus Pharyngeus: استبعاد LPR والأورام','SLP: تأهيل البلع مع أخصائي النطق']},
+    points:['FEES: تقييم مباشر بالمنظار المرن','MBSS: ديناميكية البلع بالأشعة','Zenker\'s Diverticulum: Endoscopic Myotomy','Cricopharyngeal Dysfunction: Botox / Myotomy','Globus Pharyngeus: استبعاد LPR والأورام','SLP: تأهيل البلع مع أخصائي النطق'],
+    kw:['dysphagia','swallowing','FEES','MBSS','Zenker','cricopharyngeal']},
   { id:'lpr', icon:'🔥', en:'Laryngopharyngeal Reflux (LPR)', ar:'الارتجاع الحنجري البلعومي',
     desc:'الارتجاع الحنجري البلعومي وتأثيره على الصوت والحلق والسعال المزمن.',
-    points:['أعراض: خشونة + سعال + Globus + تنحنح','RSI ≥ 13 = مشتبه / RFS ≥ 7 = إيجابي','Peptest لتشخيص الارتجاع غير الحمضي (40%)','علاج: PPI + Alginate + حمية خاصة','تجنب: قهوة، شوكولاتة، حمضيات، دهون','علاج 3-6 أشهر قبل إعادة التقييم']},
+    points:['أعراض: خشونة + سعال + Globus + تنحنح','RSI ≥ 13 = مشتبه / RFS ≥ 7 = إيجابي','Peptest لتشخيص الارتجاع غير الحمضي (40%)','علاج: PPI + Alginate + حمية خاصة','تجنب: قهوة، شوكولاتة، حمضيات، دهون','علاج 3-6 أشهر قبل إعادة التقييم'],
+    kw:['laryngopharyngeal reflux','LPR','GERD','reflux','pepsin']},
   { id:'neuro', icon:'🧠', en:'Neurolaryngology', ar:'الاضطرابات العصبية للحنجرة',
     desc:'الاضطرابات العصبية للحنجرة من شلل وتشنج واضطرابات رعاش وخيارات العلاج.',
-    points:['Unilateral VCP: Thyroplasty Type I','Bilateral VCP: Cordotomy / Arytenoidectomy','Spasmodic Dysphonia: Botox الدرقية-الطرجهالية','Essential Vocal Tremor: Botox أو دوائي','Laryngeal Reinnervation للشلل الأحادي','Arytenoid Adduction للفجوة الكبيرة']},
+    points:['Unilateral VCP: Thyroplasty Type I','Bilateral VCP: Cordotomy / Arytenoidectomy','Spasmodic Dysphonia: Botox الدرقية-الطرجهالية','Essential Vocal Tremor: Botox أو دوائي','Laryngeal Reinnervation للشلل الأحادي','Arytenoid Adduction للفجوة الكبيرة'],
+    kw:['vocal fold paralysis','spasmodic dysphonia','neurolaryngology','thyroplasty','botulinum']},
   { id:'cancer', icon:'🎯', en:'Laryngeal Cancer', ar:'أورام الحنجرة',
     desc:'أورام الحنجرة الخبيثة مع التركيز على الحفاظ على الصوت والوظيفة.',
-    points:['تصنيف: Supraglottic/Glottic/Subglottic','TNM Staging: الخطة العلاجية','TLM (Transoral Laser): T1-T2','Radiotherapy ± Chemotherapy','Partial Laryngectomy للحفاظ على الوظيفة','Total Laryngectomy + TEP: T3-T4 المتقدم']},
+    points:['تصنيف: Supraglottic/Glottic/Subglottic','TNM Staging: الخطة العلاجية','TLM (Transoral Laser): T1-T2','Radiotherapy ± Chemotherapy','Partial Laryngectomy للحفاظ على الوظيفة','Total Laryngectomy + TEP: T3-T4 المتقدم'],
+    kw:['laryngeal cancer','laryngeal carcinoma','glottic','supraglottic','laryngectomy','transoral laser']},
   { id:'provoice', icon:'🎤', en:'Professional Voice Care', ar:'رعاية الصوت المهني',
     desc:'رعاية أصوات المهنيين: المغنين والمعلمين والخطباء والممثلين.',
-    points:['Stroboscopy: تقييم تذبذب الأحبال الصوتية','VHI (Voice Handicap Index) للتقييم','Vocal Hygiene: ترطيب + تقليل Throat Clearing','Vocal Hemorrhage: توقف فوري + صمت صوتي','Vocal Cord Augmentation لتحسين الإغلاق','Pre/Post-performance Assessment']},
+    points:['Stroboscopy: تقييم تذبذب الأحبال الصوتية','VHI (Voice Handicap Index) للتقييم','Vocal Hygiene: ترطيب + تقليل Throat Clearing','Vocal Hemorrhage: توقف فوري + صمت صوتي','Vocal Cord Augmentation لتحسين الإغلاق','Pre/Post-performance Assessment'],
+    kw:['professional voice','singer','voice therapy','stroboscopy','vocal hygiene']},
   { id:'peds', icon:'👶', en:'Pediatric Laryngology', ar:'حنجرة الأطفال',
     desc:'حنجرة الأطفال من تلين الحنجرة حتى الأورام والتضيقات الخلقية.',
-    points:['Laryngomalacia: الأكثر شيوعاً — Supraglottoplasty للشديد','Subglottic Hemangioma: Propranolol أولاً','RRP: CO₂ Laser + Cidofovir','Congenital Laryngeal Web: Endoscopic Lysis','Bilateral VCP: Tracheotomy مؤقتة','Acquired Subglottic Stenosis: LTR']},
+    points:['Laryngomalacia: الأكثر شيوعاً — Supraglottoplasty للشديد','Subglottic Hemangioma: Propranolol أولاً','RRP: CO₂ Laser + Cidofovir','Congenital Laryngeal Web: Endoscopic Lysis','Bilateral VCP: Tracheotomy مؤقتة','Acquired Subglottic Stenosis: LTR'],
+    kw:['pediatric laryngology','laryngomalacia','subglottic hemangioma','RRP','pediatric airway']},
+];
+
+const SLEEP = [
   { id:'osa', icon:'😴', en:'Sleep OSA', ar:'انقطاع التنفس الانسدادي أثناء النوم',
     desc:'تشخيص انقطاع التنفس الانسدادي وخيارات علاجه الجراحية وغير الجراحية.',
-    points:['PSG / Home Sleep Test: AHI للتصنيف (≥30 شديد)','CPAP: الخيار الأول — Titration للضغط المثالي','DISE: تحديد موقع الانسداد أثناء النوم','Tonsillectomy + Adenoidectomy عند الأطفال','UPPP + Tongue Base Reduction','Hypoglossal Nerve Stimulator (Inspire): AHI 15-65']},
+    points:['PSG / Home Sleep Test: AHI للتصنيف (≥30 شديد)','CPAP: الخيار الأول — Titration للضغط المثالي','DISE: تحديد موقع الانسداد أثناء النوم','Tonsillectomy + Adenoidectomy عند الأطفال','UPPP + Tongue Base Reduction','Hypoglossal Nerve Stimulator (Inspire): AHI 15-65'],
+    kw:['sleep apnea','OSA','CPAP','polysomnography','DISE','snoring','hypoglossal','UPPP']},
 ];
 
 const GEN = [
@@ -891,7 +920,7 @@ let currentTab  = 'upd';
 let detailStack = [];
 let deferredPrompt = null;
 
-const ALL_DATA = { sinus: SINUS, voice: VOICE, gen: GEN, biz: BIZ, pub: PUB };
+const ALL_DATA = { sinus: SINUS, voice: VOICE, sleep: SLEEP, gen: GEN, biz: BIZ, pub: PUB };
 
 function goTab(sec) {
   if (detailStack.length > 0) return;
@@ -977,6 +1006,7 @@ function buildList(cat, data, containerId) {
         <div class="sub-en">${item.en}</div>
         <div class="sub-ar">${item.ar}</div>
       </div>
+      <span class="sub-art-count" id="sac-${cat}-${item.id}"></span>
       <div class="sub-chevron">›</div>
     </div>
   `).join('');
@@ -984,9 +1014,28 @@ function buildList(cat, data, containerId) {
 
 buildList('sinus', SINUS, 'sinus-list');
 buildList('voice', VOICE, 'voice-list');
+buildList('sleep', SLEEP, 'sleep-list');
 buildList('gen',   GEN,   'gen-list');
 buildList('biz',   BIZ,   'biz-list');
 buildList('pub',   PUB,   'pub-list');
+
+function updateSubCardCounts() {
+  const p = allPapers.filter(a => !a.reject);
+  const allSections = { sinus: SINUS, voice: VOICE, sleep: SLEEP, gen: GEN, biz: BIZ, pub: PUB };
+  Object.entries(allSections).forEach(([cat, items]) => {
+    items.forEach(item => {
+      const el = document.getElementById('sac-' + cat + '-' + item.id);
+      if (!el) return;
+      const kw = item.kw || [];
+      const count = kw.length === 0 ? 0 : p.filter(a => {
+        const text = ((a.title_en || '') + ' ' + (a.summary_en || '')).toLowerCase();
+        return kw.some(k => text.includes(k.toLowerCase()));
+      }).length;
+      el.textContent = count > 0 ? count : '';
+      el.style.display = count > 0 ? 'inline-block' : 'none';
+    });
+  });
+}
 
 // ── PWA ─────────────────────────────────────────────────────────────
 
@@ -1096,6 +1145,7 @@ async function loadDate(dateStr) {
     if (homeDateEl) homeDateEl.textContent = `📅 ${dateLabel}`;
     renderPapers(allPapers);
     renderSectionArticles();
+    updateSubCardCounts();
   } catch(err) {
     allPapers = [];
     const homeEl = document.getElementById('home-upd-count');
@@ -1167,7 +1217,6 @@ function updateNavBadges() {
   const counts = {
     all:   p.length,
     sinus: p.filter(a => SUBS_SINUS.includes(a.subspecialty)).length,
-    skull: p.filter(a => a.subspecialty === 'skull_base').length,
     voice: p.filter(a => a.subspecialty === 'laryngology').length,
     sleep: p.filter(a => a.subspecialty === 'sleep').length,
     gen:   p.filter(a => SUBS_GEN.includes(a.subspecialty)).length,
@@ -1175,8 +1224,7 @@ function updateNavBadges() {
     pub:   p.filter(a => a.subspecialty === 'public').length,
   };
   // Section card counts
-  [['scbc-all',counts.all],['scbc-sinus',counts.sinus],['scbc-skull',counts.skull],
-   ['scbc-voice',counts.voice],['scbc-sleep',counts.sleep],['scbc-gen',counts.gen],
+  [['scbc-all',counts.all],['scbc-sinus',counts.sinus],   ['scbc-voice',counts.voice],['scbc-sleep',counts.sleep],['scbc-gen',counts.gen],
    ['scbc-biz',counts.biz],['scbc-pub',counts.pub]].forEach(([id,n]) => {
     const el = document.getElementById(id); if (el) el.textContent = n;
   });
