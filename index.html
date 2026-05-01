@@ -296,7 +296,19 @@
     .uhc-body   { flex:1; position:relative; z-index:1; }
     .uhc-title  { font-size:18px; font-weight:800; color:#fff; letter-spacing:1px; }
     .uhc-sub    { font-size:12px; color:rgba(255,255,255,0.8); margin-top:2px; }
-    .uhc-badge  { display:inline-block; background:rgba(255,255,255,0.2); border-radius:8px; padding:2px 8px; font-size:11px; color:#fff; margin-top:6px; }
+    .uhc-date   { font-size:11px; color:rgba(255,255,255,0.75); margin-top:3px; }
+    .uhc-badge  { display:inline-block; background:rgba(255,255,255,0.2); border-radius:8px; padding:2px 8px; font-size:11px; color:#fff; margin-top:4px; }
+
+    .upd-date-bar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:6px 16px 0; flex-shrink:0;
+    }
+    .upd-date-txt { font-size:13px; font-weight:700; color:var(--text); }
+    .upd-count-pill {
+      background:linear-gradient(135deg,#0F766E,#14B8A6);
+      color:#fff; border-radius:12px; padding:2px 10px;
+      font-size:12px; font-weight:700;
+    }
     .uhc-arrow  { font-size:22px; color:rgba(255,255,255,0.45); }
 
     #upd .sec-header { background:linear-gradient(135deg,#0D4F4A,#0F766E,#14B8A6); }
@@ -496,6 +508,7 @@
         <div class="uhc-body">
           <div class="uhc-title">UPDATES</div>
           <div class="uhc-sub">تحديث يومي من PubMed · مراجعة أدبية مصفّاة</div>
+          <div class="uhc-date" id="home-upd-date">📅 ...</div>
           <div class="uhc-badge" id="home-upd-count">⏳ تحميل...</div>
         </div>
         <div class="uhc-arrow">›</div>
@@ -586,16 +599,20 @@
       </div>
       <div class="sec-emoji">📰</div>
     </div>
-    <!-- Controls row: date picker + language toggle + count -->
+    <!-- Date + count bar -->
+    <div class="upd-date-bar">
+      <span class="upd-date-txt" id="upd-date-display">📅 ...</span>
+      <span class="upd-count-pill" id="upd-count-lbl">—</span>
+    </div>
+    <!-- Controls row: date picker + language toggle -->
     <div class="upd-controls">
       <select id="date-picker-upd" class="upd-date-sel" onchange="loadDate(this.value)">
-        <option value="">📅 التاريخ</option>
+        <option value="">📅 اختر يوم</option>
       </select>
       <div class="upd-lang-grp">
         <button class="lang-tog-btn active" id="lang-ar-btn" onclick="setUpdLang('ar')">ع</button>
         <button class="lang-tog-btn" id="lang-en-btn" onclick="setUpdLang('en')">EN</button>
       </div>
-      <span class="upd-count-lbl" id="upd-count-lbl"></span>
     </div>
     <!-- Filter tabs -->
     <div class="upd-tabs" id="upd-tabs">
@@ -920,6 +937,13 @@ const SUB_LABELS = {
 
 const CONF_LABEL = { '🟢':'Practice-Changing', '🟡':'Worth Knowing', '🔴':'Weak Evidence' };
 
+function formatDateAr(dateStr) {
+  try {
+    const d = new Date(dateStr + 'T12:00:00');
+    return d.toLocaleDateString('ar-SA', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  } catch { return dateStr; }
+}
+
 // Open external link safely on iOS standalone and regular browser
 function openExternal(url) {
   if (window.navigator.standalone) {
@@ -963,10 +987,16 @@ async function loadDate(dateStr) {
     if (!r.ok) throw new Error('no data');
     allPapers = await r.json();
     const published = allPapers.filter(a => !a.reject);
+    const n = published.length;
+    const dateLabel = formatDateAr(dateStr);
     const countEl = document.getElementById('upd-count-lbl');
-    if (countEl) countEl.textContent = `${published.length} مقالة`;
+    if (countEl) countEl.textContent = `${n} مقالة`;
+    const dateEl = document.getElementById('upd-date-display');
+    if (dateEl) dateEl.textContent = `📅 ${dateLabel}`;
     const homeEl = document.getElementById('home-upd-count');
-    if (homeEl) homeEl.textContent = `✅ ${published.length} مقالة`;
+    if (homeEl) homeEl.textContent = `✅ ${n} مقالة`;
+    const homeDateEl = document.getElementById('home-upd-date');
+    if (homeDateEl) homeDateEl.textContent = `📅 ${dateLabel}`;
     renderPapers(allPapers);
   } catch {
     allPapers = [];
